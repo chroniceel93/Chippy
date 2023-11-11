@@ -1,0 +1,54 @@
+#include "tehRAMS.h"
+
+#include <cstring>
+#include <stdexcept>
+
+bool tehRAMS::validate_memory_access(int addr) { 
+    return (addr > -1 && addr <= 4096) ? true : false;
+}
+
+tehRAMS::tehRAMS() {
+    tehRAMS::clear_tehRAMS();
+    return;
+}
+
+void tehRAMS::clear_tehRAMS() {
+    unsigned char data[80] = {
+        0xF0, 0x90, 0x90, 0x90, 0xF0, // HEX ZERO  - (0x000-0x004)
+        0x20, 0x60, 0x20, 0x20, 0x70, // HEX ONE   - (0x005-0x009)
+        0xF0, 0x10, 0xF0, 0x80, 0xF0, // HEX TWO   - (0x00A-0x00E)
+        0xF0, 0x10, 0xF0, 0x10, 0xF0, // HEX THREE - (0x00F-0x013)
+        0x90, 0x90, 0xF0, 0x10, 0x10, // HEX FOUR  - ()
+        0xF0, 0x80, 0xF0, 0x10, 0xF0, // HEX FIVE  - ()
+        0xF0, 0x80, 0xF0, 0x90, 0xF0, // HEX SIX   - ()
+        0xF0, 0x10, 0x20, 0x40, 0x40, // HEX SEVEN - ()
+        0xF0, 0x90, 0xF0, 0x90, 0xF0, // HEX EIGHT - ()
+        0xF0, 0x90, 0xF0, 0x10, 0xF0, // HEX NINE  - ()
+        0xF0, 0x90, 0xF0, 0x90, 0x90, // HEX A     - ()
+        0xE0, 0x90, 0xE0, 0x90, 0xE0, // HEX B     - ()
+        0xF0, 0x80, 0x80, 0x80, 0xF0, // HEX C     - ()
+        0xE0, 0x90, 0x90, 0x90, 0xE0, // HEX D     - ()
+        0xF0, 0x80, 0xF0, 0x80, 0xF0, // HEX E     - ()
+        0xF0, 0x80, 0xF0, 0x80, 0x80  // HEX F     - ()
+    };
+    for (int i = 0; i < 80; i++) {
+        tehRAMS::write_ram(i, data[i]);
+    }
+    for (int i = 0x200; i < 4096; i++) {
+        tehRAMS::write_ram(i, 0);
+    }
+}
+
+unsigned char tehRAMS::read_ram(int addr) {
+    return tehRAMS::validate_memory_access(addr) ? memory[addr] : 255;
+}
+
+bool tehRAMS::write_ram(int addr, unsigned char val) { 
+    bool fail = false;
+    if (tehRAMS::validate_memory_access(addr)) {
+        this->memory[addr] = val;
+    } else {
+        fail = true;
+    }
+    return fail;
+}
