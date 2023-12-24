@@ -15,8 +15,11 @@ private:
     tehBEEP speaker;
     tehBOOP keyboard;
 
-public:
+    bool speakerState;
 
+public:
+    tehBUS();
+    
     bool get_exit_state();
 
     unsigned char read_ram(int addr);
@@ -29,9 +32,12 @@ public:
 
     void clock_bus();
 
+    void scream();
+
     bool test_key(unsigned char value);
 
     unsigned char get_key();
+    
 };
 
 #endif

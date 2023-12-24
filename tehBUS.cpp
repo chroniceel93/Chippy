@@ -1,5 +1,9 @@
 #include "tehBUS.h"
 
+tehBUS::tehBUS() {
+    this->speakerState = true; // start muted
+}
+
 bool tehBUS::get_exit_state() {
     return this->keyboard.get_exit_state();
 }
@@ -58,7 +62,13 @@ bool tehBUS::copy_sprite(int x, int y, short int addr, int len) {
 void tehBUS::clock_bus() {
     this->keyboard.process_events();
     this->screen.refresh_screen();
+    this->speaker.SoundTick(this->speakerState);
+    this->speakerState = true;
     return;
+}
+
+void tehBUS::scream() {
+    this->speakerState = false;
 }
 
 bool tehBUS::test_key(unsigned char value) {

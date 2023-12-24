@@ -98,6 +98,7 @@ void tehCPUS::clock_60hz() {
         this->DTreg--;
     } // else do_nothing();
     if (this->STreg > 0) {
+        this->bus->scream();
         this->STreg--;
     } // else do_nothing()
     this->vblank_quirk_block = false;
