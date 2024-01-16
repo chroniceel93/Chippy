@@ -32,7 +32,7 @@ public:
 
     void clock_bus();
 
-    void scream();
+    void screm();
 
     bool test_key(unsigned char value);
 

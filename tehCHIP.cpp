@@ -42,9 +42,9 @@ void tehCHIP::execute()  {
             this->processor.clock_60hz();
             start = std::chrono::steady_clock::now();
         } // else, do_nothing();
-        // this->processor.clock_sys();
+        this->processor.clock_sound();
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        std::this_thread::sleep_for(std::chrono::milliseconds(0));
         end = std::chrono::steady_clock::now();
     }
     return;

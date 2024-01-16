@@ -67,7 +67,7 @@ void tehBUS::clock_bus() {
     return;
 }
 
-void tehBUS::scream() {
+void tehBUS::screm() {
     this->speakerState = false;
 }
 

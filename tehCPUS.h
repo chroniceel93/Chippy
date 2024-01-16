@@ -132,6 +132,8 @@ public:
 
     void clock_60hz();
 
+    void clock_sound();
+
     void reset();
 };
 
