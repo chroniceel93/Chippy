@@ -37,7 +37,7 @@ std::string tehROM::read_next_chunk() {
         chunk = this->fileSize % this->chunkSize;
     } // else do_nothing();
 
-    char readInBuffer[chunk];
+    char *readInBuffer = new char[chunk];
 
     // pre-allocate memory to avoid re-allocating when copying over c-string
     // This is already pretty brute-force, no need to make it any slower than it
@@ -49,5 +49,6 @@ std::string tehROM::read_next_chunk() {
         readInString += readInBuffer[i];
     }
     this->currentChunk++;
+    delete[] readInBuffer;
     return readInString;
 }
