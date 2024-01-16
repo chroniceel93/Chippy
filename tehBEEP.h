@@ -47,21 +47,9 @@ private:
     unsigned int runningSampleIndex;
 
     static void SDLAudioCallback(void *UserData, Uint8 *AudioData, int Length) {
-        // SDL_LogMessage(0, SDL_LOG_PRIORITY_CRITICAL, 
-        //                  "CALLBACK LEN: %d", Length);
         
         audio_ring_buffer *RingBuffer = (audio_ring_buffer *) UserData;
 
-        if (RingBuffer->writeCursor != RingBuffer->playCursor) {
-            // Write cursor is getting behind the play cursor?
-            SDL_LogMessage(0, SDL_LOG_PRIORITY_CRITICAL, "Canary Found!");
-            SDL_LogMessage(0, SDL_LOG_PRIORITY_CRITICAL, 
-                            "RingBuffer Size: %x", RingBuffer->Size);
-            SDL_LogMessage(0, SDL_LOG_PRIORITY_CRITICAL, 
-                            "RingBuffer Play: %x", RingBuffer->playCursor);
-            SDL_LogMessage(0, SDL_LOG_PRIORITY_CRITICAL, 
-                            "RingBUffer Write: %x", RingBuffer->writeCursor);
-        }
         // Initialize with Case B
         int Region1Size = Length;
         int Region2Size = 0;
@@ -72,7 +60,6 @@ private:
         if (RingBuffer->playCursor + Length > RingBuffer->Size) {
             Region1Size = RingBuffer->Size - RingBuffer->playCursor;
             Region2Size = Length - Region1Size;
-            // SDL_LogMessage(0, SDL_LOG_PRIORITY_CRITICAL, "CASEB");
         }
 
         // Copy!
