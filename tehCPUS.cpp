@@ -20,8 +20,8 @@ tehCPUS::tehCPUS(tehBUS& bus) {
  * 
  * Multiplying an index number by 4 (or shifting the binary representation of
  *   such to the left twice), gets us how many bits  Xinto the byte, starting 
- *   from the least significant digit our desired datum is. With that knowledge, we
- *   can then shift our word to the right by X bits, and then mask out the
+ *   from the least significant digit our desired datum is. With that knowledge,
+ *   we can then shift our word to the right by X bits, and then mask out the
  *   remainder by performing a bitwise AND on the resultant word. \n 
  *
  * So- Index = bit * 4 == bit << 2  \n 
@@ -140,8 +140,8 @@ void tehCPUS::reset() {
  *   Most significant bit, to the least. In many cases, simply knowing the first
  *   bit is enough to divine exactly what operation to perform. There are excep-
  *   tions to this, however, where other identifying bits must be used. For
- *   these instructions, we will call a function that will decode that particular 
- *   subset of instructions.
+ *   these instructions, we will call a function that will decode that 
+ *   particular subset of instructions.
  * 
  * @param inst Instruction to decode and execute.
  */
@@ -866,8 +866,8 @@ void tehCPUS::RDDT(unsigned short int inst) {
  * LDK Vx - (0xFx0A).
  * 
  * On LDK, halt interpreter. Wait for key press. If key-press is detected, beep.
- *  beep, and remain halted until key is released, and then resume. Save the 
- *  scancode into Register Vx.
+ *   beep, and remain halted until key is released, and then resume. Save the 
+ *   scancode into Register Vx.
  * 
  * @param inst 
  */
