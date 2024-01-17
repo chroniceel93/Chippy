@@ -82,7 +82,9 @@ void tehCPUS::clock_sys() {
         short int instruction = this->bus->read_ram(this->PC);
         instruction = (instruction << 8) + this->bus->read_ram(this->PC + 1);
         this->decode_and_execute(instruction);
-        this->PC += 2;
+        if (!this->haltPC) {
+            this->PC += 2;
+        } // else, do not iterate PC
     } // else, execution is halted until display refresh.
     return;
 }
@@ -123,6 +125,7 @@ void tehCPUS::reset() {
     this->Ireg = 0;
     this->DTreg = 0;
     this->STreg = 0;
+    this->haltPC = false;
     for (int i = 0; i < 16 ; i++) {
         this->regFile[i] = 0;
         this->stackFile[i] = 0;
@@ -862,16 +865,28 @@ void tehCPUS::RDDT(unsigned short int inst) {
  * 
  * LDK Vx - (0xFx0A).
  * 
- * Instruction is repeated until a scancode is registered, and then the scancode
- *   is saved into Register Vx
+ * On LDK, halt interpreter. Wait for key press. If key-press is detected, beep.
+ *  beep, and remain halted until key is released, and then resume. Save the 
+ *  scancode into Register Vx.
  * 
  * @param inst 
  */
 void tehCPUS::LDK(unsigned short int inst) {
     unsigned char temp = this->bitN(inst, 2);
-    this->regFile[temp] = this->bus->get_key();
-    if (this->regFile[temp] > 0xF) {
-        this->PC = this->PC - 2;
+    // We're doing this a little bit out of order! This is fine.
+    // If we read in the keys and *then* test while looping over this instr-
+    //  uction, we would overwrite the recorded key every time. 
+    if (this->regFile[temp] >= 0x0 && this->regFile[temp] <= 0xF
+     && this->haltPC == true) {
+        // If the key is still being held, beep and remain halted
+        if (this->bus->test_key(this->regFile[temp])) {
+            this->STreg = 4;
+        } else if (this->STreg == 0) {
+            this->haltPC = false;
+        }
+    } else {
+        this->haltPC = true;
+        this->regFile[temp] = this->bus->get_key();
     }
     return;
 }

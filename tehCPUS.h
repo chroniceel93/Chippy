@@ -47,6 +47,7 @@ private:
     tehBUS* bus;
 
     bool vblank_quirk_block;
+    bool haltPC; 
 
     //REGISTERS
     unsigned char regFile[16];
