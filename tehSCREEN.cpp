@@ -136,6 +136,12 @@ void tehSCREEN::blank_screen()  {
  *   we set the pixel to white. We do not have, or need, logic to explicitly set
  *   a pixel to black.
  * 
+ * NOTICE:
+ * 
+ * This effect seems to misbehave on MacOS. Looking into it further. It looks 
+ *   like textures are being blitted to the render texture out of order. This 
+ *   leads to a rather jarring jittering effect, displaying screen data that can 
+ *   be several seconds old.
  * 
  * @param x - X coordinate
  * @param y  - Y coordinate
@@ -173,6 +179,7 @@ bool tehSCREEN::draw_point(int x, int y) {
     } // else, do_nothing();
     return flipped;
 }
+
 
 /**
  * @brief Updates the renderer, and presents it.

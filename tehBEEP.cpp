@@ -65,6 +65,12 @@ tehBEEP::~tehBEEP() {
  *  SDL_LockAudioDevice() before and SDL_UnlockAudioDevice() after calling this
  *  function to avoid undefined behavior.
  * 
+ * NOTICE:
+ * 
+ * Either the output of this function is incorrect, audio playback is too in 
+ *   Windows, or WINE is exhibiting an unknown issue. The tone sounds higher 
+ *   pitched than it should.
+ * 
  * @param bool Mute on true, beep on false.
  */
 void tehBEEP::GenerateSamples(bool mute) {
