@@ -12,7 +12,6 @@
 
 #include <random>
 #include <stdexcept>
-#include <thread>
 
 #include "tehBUS.h"
 

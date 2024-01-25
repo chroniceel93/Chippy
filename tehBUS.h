@@ -6,8 +6,6 @@
 #include "tehBOOP.h"
 #include "tehBEEP.h"
 
-#include <stdexcept>
-
 class tehBUS {
 private:
     tehRAMS memory;

@@ -3,7 +3,6 @@
 
 #include <chrono>
 #include <thread>
-#include <stdexcept>
 
 #include "tehROM.h"
 #include "tehBUS.h"
