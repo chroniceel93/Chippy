@@ -4,3 +4,4 @@
 !*.md
 !*.sh
 !.gitignore
+!CMakeLists.txt
