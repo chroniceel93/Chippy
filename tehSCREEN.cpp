@@ -38,7 +38,7 @@ tehSCREEN::tehSCREEN()  {
             this->renderer = SDL_CreateRenderer(
                 this->window
                 , -1
-                , 0
+                , SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
             );
             // Repeat the nullptr test with renderer
             if (this->renderer == NULL) {
