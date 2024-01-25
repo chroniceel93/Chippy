@@ -47,16 +47,23 @@ private:
     tehBUS* bus;
 
     bool vblank_quirk_block;
+    // If true, PC stops advancing. Instructions that set this to true should
+    //   eventually resuem.
     bool haltPC; 
 
-    //REGISTERS
+    // REGISTERS
     unsigned char regFile[16];
+    // STACK
     unsigned short int stackFile[16];
-    unsigned char SPreg; // stack pointer
-    unsigned short int PC; // Program counter - pseudo-register- Not accessible from program space
+    // stack pointer
+    unsigned char SPreg; 
+    // Program counter - pseudo-register- Not accessible from program space
+    unsigned short int PC; 
     unsigned short int Ireg;
-    unsigned char DTreg; // display timer register
-    unsigned char STreg; // sound timer register - play tone when nonzero. Decreses at 60Hz
+    // display timer register
+    unsigned char DTreg; 
+     // sound timer register - play tone when nonzero. Decreses at 60Hz
+    unsigned char STreg;
 
     template<class T>
     unsigned char bitN(T data, int bit);
