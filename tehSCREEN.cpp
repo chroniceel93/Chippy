@@ -35,10 +35,12 @@ tehSCREEN::tehSCREEN()  {
             this->SDL_Status = false;
         } else {
             // Attempt to create a renderer
+            // Keep flags at 0 - SDL selects hardware renderers first, and
+            //   falls back to Software if not available. 
             this->renderer = SDL_CreateRenderer(
                 this->window
                 , -1
-                , SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC
+                , 0 
             );
             // Repeat the nullptr test with renderer
             if (this->renderer == NULL) {
