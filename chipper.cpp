@@ -2,7 +2,11 @@
 
 #include <nfd.h>
 
+#ifdef _WIN32
+int WinMain(int argc, char *argv[]) {
+#else
 int main(int argc, char *argv[]) {
+#endif
     tehCHIP b;
     nfdchar_t *outPath = NULL;
     nfdresult_t result = NFD_OpenDialog( "ch8", NULL, &outPath);
