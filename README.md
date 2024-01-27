@@ -16,10 +16,13 @@ In its current form, the interpreter resides entirely in the tehCHIP class. (Do 
 
 Incidentally, during the initial creation of this interpreter, I ended up disassembling in its entirety a PONG rom. I do have at hand the original notes for that disassembly, and further general notes concerning the architecture of the overall program. I've included scans of these notes for posterity as they are ultimately the foundation upon which this emulator was built.
 
-This project has come a long way, but it is by no means done. There are not any menus- ROM loading must be done from the command line, and the emulator cannot be resized. There is no way to toggle on, or off the emulation of different quirks. I have not managed to successfully build this on Mac OS, nor have I even bothered to try on Windows. But, as it stands, the emulator is functional, accurate, and stable- Which is far, far more than I'd planned on once upon a time.
+This project has come a long way, but it is by no means done. There is no way to toggle on, or off the emulation of different quirks, nor can I resize the screen. But, as it stands, the emulator is functional, accurate, and stable- Which is far, far more than I'd planned on once upon a time.
 
-Also, as a proof of concept, and so I can have something to copy off of later- I want to set up a build system that can spit out executables for Windows, Mac OS, and Linux. Statically linked, just for fun, if I can.
+The project has a very basic cmake configuration, but it's not really working for anything but linux at the moment. Now that the project is in a place I'm happy with, I'm going to extend it to work on every platform I can.
 
-This project requires no other dependencies than the SDL2 development libraries. It compiles under Windows through MinGW, Mac OS with Xcode, and Linux with g++. 
+## Copyright and Credit
 
-Mac OS may have display issues, and lacking a GUI for file selection, using the command line on all platforms is currently recommended.
+This program is built upon SDL2, under the Zlib license. Without it, it would not beep, or flash, or do any of the neat things I'd otherwise like it to do.
+
+The file selection code is enabled by a wonderfully convenient library 'Native File Dialogue' provided by Michael Labbe under the Zlib license.
+
