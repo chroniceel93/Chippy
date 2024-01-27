@@ -9,7 +9,7 @@
 #ifndef TEHSCREEN_H_
 #define TEHSCREEN_H_
 
-#include "SDL2/SDL.h"
+#include "SDL.h"
 
 /**
  * @brief TehSCREEN instances, and performs all operations on, our renderer.

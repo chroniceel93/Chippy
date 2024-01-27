@@ -2,13 +2,8 @@
 
 #include <nfd.h>
 
-int selftest() {
-    return 0; // STUB
-}
-
 int main(int argc, char *argv[]) {
     tehCHIP b;
-    std::string rom_path;
     nfdchar_t *outPath = NULL;
     nfdresult_t result = NFD_OpenDialog( "ch8", NULL, &outPath);
 

@@ -1,8 +1,8 @@
 #ifndef TEHBEEP_H_
 #define TEHBEEP_H_
 
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_audio.h"
+#include "SDL.h"
+#include "SDL_audio.h"
 
 class tehBEEP {
 private:

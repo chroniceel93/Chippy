@@ -1,7 +1,7 @@
 #ifndef TEHBOOP_H_
 #define TEHBOOP_H_
 
-#include "SDL2/SDL.h"
+#include "SDL.h"
 
 class tehBOOP {
 private:
