@@ -5,3 +5,4 @@
 !*.sh
 !.gitignore
 !CMakeLists.txt
+!lib/
