@@ -25,35 +25,34 @@ find_package(SDL2 REQUIRED CONFIG COMPONENTS SDL2main)
 add_executable(chippy8 ${SOURCE_FILES})
 
 # TODO: Handle other platforms
-if (UNIX)
-    add_custom_target (BuildNFDLib ALL
-        COMMAND make -C ${CMAKE_CURRENT_SOURCE_DIR}/lib/nfd/build/gmake_linux_zenity/
-    )
-endif (UNIX)
-
-if (WIN32)
+IF (CMAKE_HOST_WIN32)
     add_custom_target (BuildNFDLib ALL
         COMMAND make -C ${CMAKE_CURRENT_SOURCE_DIR}/lib/nfd/build/gmake_windows/
     )
-endif (WIN32)
+ELSEIF (CMAKE_HOST_APPLE) 
+    add_custom_target (BuildNFDLib ALL
+        COMMAND make -C ${CMAKE_CURRENT_SOURCE_DIR}/lib/nfd/build/gmake_macosx/
+    )
+ELSE ()
+    add_custom_target (BuildNFDLib ALL
+        COMMAND make -C ${CMAKE_CURRENT_SOURCE_DIR}/lib/nfd/build/gmake_linux_zenity/
+    )
+ENDIF()
 
 # This is all *really* messy but it works!
 add_library(NFDLib STATIC IMPORTED)
 
 set_target_properties(NFDLib PROPERTIES
-    if (UNIX)
+#    IF (CMAKE_HOST_WIN32) 
+#        IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/nfd/build/lib/Release/x64/nfd.lib
+#    ELSE()
     	IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/nfd/build/lib/Release/x64/libnfd.a
-    endif (UNIX)
-    if (WIN32)
-	IMPORTED_LOCATION ${CMAKE_CURRENT_SOURCE_DIR}/lib/nfd/build/lib/Release/x64/nfd.lib
-    endif (WIN32)
+#    ENDIF()
     INTERFACE_INCLUDE_DIRECTORIES ${CMAKE_CURRENT_SOURCE_DIR}/lib/nfd/src/include
     INTERFACE_COMPILE_DEFINITIONS "USING_NFDLIB;NFDLIB_STATIC"
 )
 
 add_dependencies(NFDLib BuildNFDLib)
-
-
 
 # SDL2::SDL2main is required for windows GUI stuff. It may, or may not exist depending on system.
 if (TARGET SDL2::SDL2main) 
