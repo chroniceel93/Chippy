@@ -26,3 +26,25 @@ This program is built upon SDL2, under the Zlib license. Without it, it would no
 
 The file selection code is enabled by a wonderfully convenient library 'Native File Dialogue' provided by Michael Labbe under the Zlib license.
 
+## Building the Project (Linux)
+
+Before we begin, make sure you've libSDL2 and libSDL2-mixer installed.
+
+Clone the project as normal.
+> git clone https://github.com/chroniceel93/chippy \
+> cd chippy
+
+Since we use libnfd, we need to initialize that dependency. I've included it as a git submodule, so it'll download from the original repository.
+> git submodule update --init --recursive
+
+Next, we'll make a build directory, and enter it.
+> mkdir build \
+> cd build
+
+Finally, we run cmake, and make, as standard.
+> cmake .. \
+> make
+
+When the application starts, you will be prompted to supply a chip8 rom file. Several such files can be found at the Chip-8 Archive: https://johnearnest.github.io/chip8Archive/
+
+Keep in mind, this emulator is written to the _original_ Chip-8 spec, and some ROM files take advantage of or depend on features and functionality present in later revisions.
