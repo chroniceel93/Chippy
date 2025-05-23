@@ -1,6 +1,6 @@
 #include "tehBUS.h"
 
-tehBUS::tehBUS() {
+tehBUS::tehBUS() : screen(chipper_sdl) {
     this->speakerState = true; // start muted
 }
 

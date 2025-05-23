@@ -1,6 +1,6 @@
-#include "tehSCREEN.h"
+#include "chipperSDL.h"
 
-tehSCREEN::tehSCREEN()  {
+chipperSDL::chipperSDL() {
     this->SDL_Status = true; // Assume SDL is good- Set to false if init fails
     this->background.r = 0;
     this->background.g = 0;
@@ -81,7 +81,7 @@ tehSCREEN::tehSCREEN()  {
     return;
 }
 
-tehSCREEN::~tehSCREEN() {
+chipperSDL::~chipperSDL() {
     SDL_DestroyRenderer(this->renderer);
     SDL_DestroyWindow(this->window);
     SDL_DestroyTexture(this->render_texture);
@@ -92,66 +92,15 @@ tehSCREEN::~tehSCREEN() {
     return;
 }
 
-
-/**
- * @brief Why is this in its own function?
- * 
- * Take raw pixel data, and replace a texture.
- * 
- */
-void tehSCREEN::build_tex() {
-    // Normally you would want to stream the texture, but I found that there's
-    // quite a lot more overhead with textures this small, than simply updating
-    // it.
-    this->texrect.x = 0;
-    this->texrect.y = 0;
-    this->texrect.w = 64;
-    this->texrect.h = 32;
-    SDL_UpdateTexture(this->render_texture, NULL, this->pixels, 4 * 64);
-    return;
-}
-
-/**
- * @brief Sets every pixel to opaque black. This will clear the screen.
- * 
- */
-void tehSCREEN::blank_screen()  {
+void chipperSDL::blank_screen() {
     for (int i = 0; i < 2048; i++) {
         this->pixels[i] = 0x000000FF;
     }
-    this->build_tex();
     return;
 }
 
-/**
- * @brief XOR one pixel, and return whether any white pixels were flipped.
- * 
- * The coordinate plane starts at the top left corner. X increases to the right
- *   and Y increases downwards. To evaluate a given pixel, the coordinates must
- *   be converted into an array index. This pixel offset can be found by mult-
- *   iplying the Y-coordinate by the number of pixels per row- And then adding
- *   to that the value of the X-coordinate. More specifically, for the classic
- *   display mode, this works out to (y * 64) + x.
- * 
- * Then, we test the value of the pixel in that address. If it is all hi- Then 
- *   we need to set our return variable to true, and flip it to black. Otherwise,
- *   we set the pixel to white. We do not have, or need, logic to explicitly set
- *   a pixel to black.
- * 
- * NOTICE:
- * 
- * This effect seems to misbehave on MacOS. Looking into it further. It looks 
- *   like textures are being blitted to the render texture out of order. This 
- *   leads to a rather jarring jittering effect, displaying screen data that can 
- *   be several seconds old.
- * 
- * @param x - X coordinate
- * @param y  - Y coordinate
- * @return true - White pixel was flipped
- * @return false - White pixel was not flipped.
- */
-bool tehSCREEN::draw_point(int x, int y) {
-    bool flipped = false;
+bool chipperSDL::draw_point(int x, int y) {
+        bool flipped = false;
     // Logic for if clipping is off.
     // if (x > 63) {
     //     x = x % 64;
@@ -182,37 +131,25 @@ bool tehSCREEN::draw_point(int x, int y) {
     return flipped;
 }
 
-
-/**
- * @brief Updates the renderer, and presents it.
- * 
- */
-void tehSCREEN::refresh_screen()  {
-    this->update_screen();
-    SDL_RenderPresent(this->renderer);
-    return;
-}
-
-/**
- * @brief Updates the render texture, and blends it with the renderer.
- * 
- * The values for srcrect and dstrect are currently hardcoded. The blending mode
- *   is set to blend by alpha values. Black pixels in the render texture are
- *   treated as transparent. This provides a nice, fade-out effect for white
- *   pixels.
- * 
- * TODO: Set dstrect = window dimensions.
- */
-void tehSCREEN::update_screen() {
-    this->build_tex();
+void chipperSDL::refresh_screen() {
+    // Set texture dimensions
+    this->texrect.x = 0;
+    this->texrect.y = 0;
+    this->texrect.w = 64;
+    this->texrect.h = 32;
+    // Update texture with updated values
+// Normally you would want to stream the texture, but I found that there's
+// quite a lot more overhead with textures this small, than simply updating
+// it.    
+    SDL_UpdateTexture(this->render_texture, NULL, this->pixels, 4 * 64);
+    // Create rect for blit
     SDL_Rect dstrect;
     dstrect.x = 0;
     dstrect.y = 0;
     dstrect.w = 512;
     dstrect.h = 256;
+    // Copy texture to the renderer and present
     SDL_RenderCopy(this->renderer, this->render_texture, &this->texrect, &dstrect);
-    return;
+    SDL_RenderPresent(this->renderer);
 }
 
-// A good bit of restructuring must happen if we want to handle multiple
-//  resolutions.
