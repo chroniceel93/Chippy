@@ -17,7 +17,7 @@ private:
     tehRAMS memory;
     tehSCREEN& screen;
     tehBEEP speaker;
-    tehBOOP keyboard;
+    tehBOOP& keyboard;
 
     bool speakerState;
 
