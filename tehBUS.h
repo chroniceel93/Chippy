@@ -16,7 +16,7 @@ private:
     chipperSDL chipper_sdl;
     tehRAMS memory;
     tehSCREEN& screen;
-    tehBEEP speaker;
+    tehBEEP& speaker;
     tehBOOP& keyboard;
 
     bool speakerState;

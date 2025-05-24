@@ -7,7 +7,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(SOURCE_FILES 
     ../chipper.cpp
-    tehBEEP.cpp
     tehBUS.cpp
     tehCHIP.cpp
     tehCPUS.cpp

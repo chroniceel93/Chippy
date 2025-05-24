@@ -8,12 +8,14 @@
 
 #include "tehSCREEN.h"
 #include "tehBOOP.h"
+#include "tehBEEP.h"
 #include "SDL.h"
+#include "SDL_audio.h"
 
 #ifndef CHIPPERSDL_H_
 #define CHIPPERSDL_H_
 
-class chipperSDL: public tehSCREEN, public tehBOOP {
+class chipperSDL: public tehSCREEN, public tehBOOP, public tehBEEP {
 private:
     // Variables used for tehSCREEN
     bool SDL_Status; // Hold copy of SDL Status code.
@@ -40,6 +42,51 @@ private:
         SDL_SCANCODE_4, SDL_SCANCODE_R, SDL_SCANCODE_F, SDL_SCANCODE_V
     };
 
+    // Variables used for tehBEEP
+        // Credit to David Gow's Handmade Penguin tutorial, Getting Circular with
+    //  SDL Audio by Eric Scrivner, and to LazyFoo's SDL tutorial, with which I 
+    //  kludged together something that barely works!
+    // https://lazyfoo.net/tutorials/SDL/
+    // https://davidgow.net/handmadepenguin/ch8.html
+    // https://ericscrivner.me/2017/10/getting-circular-sdl-audio/
+
+    struct audio_ring_buffer {
+        int Size; // Size of our buffer, in bytes
+        int writeCursor; // Where we will insert data into our buffer
+        int playCursor; // Where we will read data from the buffer
+        void *data;
+    };
+
+    // CONSTANT BLOCK
+    // These vars define our audio output.
+    const int samplesPerSecond = 48000;
+    // for 16 bit, stereo audio, that's 4 bytes per sample
+    const int bytesPerSample = sizeof(int16_t) * 2; 
+    // These vars define our tone.
+    const int toneHz = 200;
+    const int16_t toneVolume = 0xFFF;
+    const int squareWavePeriod = samplesPerSecond / toneHz;
+    const int halfWavePeriod = squareWavePeriod / 2;
+    // These vars define our buffers.
+    const int sampleCount = samplesPerSecond / 60;
+    const int bufferSize = (sampleCount * 4) * bytesPerSample;
+    
+    audio_ring_buffer buffer;
+
+    // A struct holding all of the various audio configuration variables.
+    SDL_AudioSpec audioSettings;
+ 
+    // Keeps track of what audio device we're using.
+    int deviceID;
+    
+    // Keep this one around always increasing (and looping), so we have
+    //   a constant tone.
+    unsigned int runningSampleIndex;
+    
+    // Private functions for audio handling.
+    static void SDLAudioCallback(void *UserData, Uint8 *AudioData, int Length);
+    void GenerateSamples(bool mute);
+
 public:
     chipperSDL();
     ~chipperSDL();
@@ -54,6 +101,9 @@ public:
     virtual bool get_exit_state() const;
     virtual bool is_key_pressed(unsigned char value) const;
     virtual unsigned char get_key_pressed() const;
+
+    // Implemented from tehBEEP
+    void SoundTick(bool mute);
 };
 
 #endif
