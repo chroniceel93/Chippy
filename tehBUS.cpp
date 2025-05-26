@@ -1,8 +1,9 @@
 #include "tehBUS.h"
 
-tehBUS::tehBUS() : screen(chipper_sdl)
-                 , keyboard(chipper_sdl)
-                 , speaker(chipper_sdl) {
+tehBUS::tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k) 
+                 : screen(s)
+                 , keyboard(k)
+                 , speaker(b) {
     this->speakerState = true; // start muted
 }
 

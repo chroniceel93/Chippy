@@ -11,11 +11,11 @@
 class tehCHIP {
 private:
     tehROM *disk;
-    tehBUS bus = tehBUS();
-    tehCPUS processor = tehCPUS(this->bus);
+    tehBUS *bus;
+    tehCPUS *processor;
 public:
 
-    tehCHIP();
+    tehCHIP(tehSCREEN& s, tehBEEP& b, tehBOOP& k);
 
     // ~tehCHIP();
 

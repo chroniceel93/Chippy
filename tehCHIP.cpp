@@ -1,6 +1,8 @@
 #include "tehCHIP.h"
 
-tehCHIP::tehCHIP() {
+tehCHIP::tehCHIP(tehSCREEN& s, tehBEEP& b, tehBOOP& k) {
+    this->bus = new tehBUS(s, b, k);
+    this->processor = new tehCPUS(*this->bus);
     this->disk = NULL;
     this->reset_system();
     return;
@@ -14,7 +16,7 @@ void tehCHIP::load_program(std::string filename) {
     do {
         output = this->disk->read_next_chunk();
         for (int i = 0; i < (int) output.size() ; i++) {
-            this->bus.write_ram(current_address++, output[i]);
+            this->bus->write_ram(current_address++, output[i]);
         }
     } while (!this->disk->get_eof());
     // Destroy tehROM class object.
@@ -31,7 +33,7 @@ void tehCHIP::execute()  {
     std::chrono::milliseconds delta;
 
     // while (!this->processor.halt() & !this->screen.update_state()) {
-    while (!this->bus.get_exit_state()) {
+    while (!this->bus->get_exit_state()) {
         delta 
            = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
         // TODO: After implementing toggle for vblank quirk, work out some math
@@ -43,15 +45,15 @@ void tehCHIP::execute()  {
                  i++) 
             {
                 // SDL_Log("Clock %d", i);
-                this->processor.clock_sys();
+                this->processor->clock_sys();
             }
 
-            this->bus.clock_bus();
+            this->bus->clock_bus();
             // this->screen.refresh_screen();
-            this->processor.clock_60hz();
+            this->processor->clock_60hz();
             start = std::chrono::steady_clock::now();
         } // else, do_nothing();
-        this->processor.clock_sound();
+        this->processor->clock_sound();
         // Sleeping for 0 milliseconds tells the task scheduler that we're
         //   ceding compute time to other processes. 'I can afford to wait'- But
         //   it allows for processing to resume as soon as the task scheduler 
@@ -64,7 +66,7 @@ void tehCHIP::execute()  {
 }
 
 void tehCHIP::reset_system()  {
-    this->processor.reset();
+    this->processor->reset();
     // this->memory.clear_tehRAMS();
     // this->screen.blank_screen();
     return;

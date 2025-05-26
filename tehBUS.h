@@ -6,14 +6,11 @@
 #include "tehBOOP.h"
 #include "tehBEEP.h"
 
-// We can have includes control this here, perhaps?
-#include "chipperSDL.h"
-
 class tehBUS {
 private:
 // This should be given to the class from somewhere else.
 // tehCHIP would make some sense, but it feels messy.
-    chipperSDL chipper_sdl;
+    // chipperSDL chipper_sdl;
     tehRAMS memory;
     tehSCREEN& screen;
     tehBEEP& speaker;
@@ -22,7 +19,7 @@ private:
     bool speakerState;
 
 public:
-    tehBUS();
+    tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k);
     
     bool get_exit_state();
 
