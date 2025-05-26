@@ -66,4 +66,4 @@ IF(TARGET SDL2::SDL2main)
     target_link_libraries(${PROJECT_NAME} PRIVATE SDL2main)
 ENDIF()
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2 NFDLib ${SYSTEM_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL2::SDL2  ${SYSTEM_LIBS})
