@@ -88,6 +88,14 @@ chipperSDL::chipperSDL() {
                     , 32
                 );
 
+                this->fade_texture = SDL_CreateTexture(
+                    this->renderer
+                    , SDL_PIXELFORMAT_RGBA8888
+                    , SDL_TEXTUREACCESS_TARGET
+                    , 64
+                    , 32
+                );
+
                 if (this->render_texture == NULL) {
                     throw SDL_GetError();
                 }
@@ -152,6 +160,10 @@ chipperSDL::chipperSDL() {
     return;
 }
 
+// Draw normal texture
+// 
+
+
 chipperSDL::~chipperSDL() {
     // Clean up SDL Audio
     free(this->buffer.data);
@@ -160,6 +172,7 @@ chipperSDL::~chipperSDL() {
     SDL_DestroyRenderer(this->renderer);
     SDL_DestroyWindow(this->window);
     SDL_DestroyTexture(this->render_texture);
+    SDL_DestroyTexture(this->fade_texture);
     this->renderer = NULL;
     this->window = NULL;
     this->render_texture = NULL;
@@ -217,14 +230,20 @@ void chipperSDL::refresh_screen() {
 // quite a lot more overhead with textures this small, than simply updating
 // it.    
     SDL_UpdateTexture(this->render_texture, NULL, this->pixels, 4 * 64);
-    // Create rect for blit
+    
+    // Create rects for blit
     SDL_Rect dstrect;
     dstrect.x = 0;
     dstrect.y = 0;
     dstrect.w = 512;
     dstrect.h = 256;
+    // Copy render_texture to fade_texture 
+    SDL_SetRenderTarget(this->renderer, this->fade_texture);
+    SDL_RenderCopy(this->renderer, this->render_texture, &this->texrect, &this->texrect);
+
     // Copy texture to the renderer and present
-    SDL_RenderCopy(this->renderer, this->render_texture, &this->texrect, &dstrect);
+    SDL_SetRenderTarget(this->renderer, NULL);
+    SDL_RenderCopy(this->renderer, this->fade_texture, &this->texrect, &dstrect);
     SDL_RenderPresent(this->renderer);
 }
 
