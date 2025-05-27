@@ -10,6 +10,7 @@
 #ifndef TEHCPUS_H_
 #define TEHCPUS_H_
 
+#include <cstring>
 #include <random>
 #include <stdexcept>
 
