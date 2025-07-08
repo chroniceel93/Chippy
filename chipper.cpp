@@ -9,8 +9,6 @@ void print_help() {
 }
 
 // We're using stat here to verify the file exists.
-// For some reason I thought it pertinent to print verbose information for all
-// of Stat's failure states.
 bool verify_file(std::string filename) {
     struct stat buffer;
     int status = 0;
@@ -18,8 +16,14 @@ bool verify_file(std::string filename) {
     status = stat(filename.c_str(), &buffer);
     if (status == -1) {
         errorCode = errno;
-        std::cout << "stat error for file: " << filename << std::endl;
-        std::cout << "errno: " << strerror(errorCode) << std::endl;
+        std::cout << "stat error for file: " 
+                  << filename 
+                  << std::endl;
+        std::cout << "errno(" 
+                  << errorCode 
+                  << "): " 
+                  << strerror(errorCode) 
+                  << std::endl;
     }
     return (status == 0);
 }
