@@ -3,3 +3,5 @@
 
 // #include <nfd.h>
 #include <iostream>
+#include <getopt.h>
+#include <sys/stat.h>
