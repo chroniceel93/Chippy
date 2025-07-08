@@ -35,7 +35,8 @@ int main(int argc, char *argv[]) {
     tehCHIP* b;
 
     std::string romFileName = "";
-
+    tehCHIP::systype compat = tehCHIP::CHIP8; // we default to Chip-8 compat.
+ 
     int choice = 0;
     // This loop iterates over every valid argument
     while (true) {
@@ -68,7 +69,7 @@ int main(int argc, char *argv[]) {
                 printf("\n");
                 break;
             */
-           case 'h':
+            case 'h':
                 print_help();
                 break;
             case 'r':
@@ -76,15 +77,22 @@ int main(int argc, char *argv[]) {
                     romFileName = optarg;
                 } // else do_nothing();
                 break;
+            case 's':
+                compat = tehCHIP::SUPERCHIP;
+                break;
         }
     }
 
     if (romFileName == "") {
-
     // If the rom file name is still empty, we can check the next non-valid arg
     // to see if the user might've tacked it on to the end of the argument array
     // Iterate through everything looking for valid files.
-        
+        for (auto i = optind; i < argc ; i++) {
+            if (verify_file(argv[i])) {
+                romFileName = argv[i];
+                i = argc;
+            }
+        }
     } // else do_nothing(), we have a valid file.
 
     if (romFileName == "") {

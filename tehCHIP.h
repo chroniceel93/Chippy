@@ -14,6 +14,9 @@ private:
     tehBUS *bus;
     tehCPUS *processor;
 public:
+    enum systype {
+        CHIP8, SUPERCHIP
+    };
 
     tehCHIP(tehSCREEN& s, tehBEEP& b, tehBOOP& k);
 
