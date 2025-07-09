@@ -33,8 +33,6 @@ int WinMain(int argc, char *argv[]) {
 #else
 int main(int argc, char *argv[]) {
 #endif
-
-// If there are no more option characters, getopt() returns -1. Then optind is the index in argv of the first argv-element that is not an option. 
     chipperSDL* sdl;
     tehCHIP* b;
 
@@ -119,33 +117,3 @@ int main(int argc, char *argv[]) {
 
     return 0;
 }
-
-// Revamp argument handling.
-// if argument starts with '-' or '--' take it as a flag, and modify logic acc-
-// ordingly. If the flag following takes an argument, arg+1 is used for that
-// argument. If no flag, assume user is passing rom file, and using defaults.
-
-/* Test flag ideas, just to make sure the system I'm writing works, actually.
--m --mute       : Mutes the audio playback
--f --fullscreen : Fullscreen window?
--s --superchip  : Enables Super-Chip mode
--r --rom        : Explicitly specifies ROM file (out of order)
-*/
-
-/*
-Routine
-If argc = 1, no arguments, print error *and* help information
-Else
-1. Check next argument (1+1 = 2)
-    - HANDLE TOO SHORT STRINGS
-    - If first character is '-', check second character
-        - If second character is '-' check against full-string commands
-        - Else check against single-char commands
-    - If command requires arg, save next argument as string (Sanitize?)
-    - Else goto 1, until arguments exhausted
-    - If rom flag not passed, take last argument as ROM. If no such argument
-        exists, print error, along with help text. 
-ALWAYS run help routine if there is an error parsing arguments.
-
-// Scratch that, let's just use getopt()
-*/
