@@ -16,6 +16,7 @@
 
 #include "tehBUS.h"
 
+namespace chippy {
 /**
  * @brief tehCPUS Decodes, and Executes Chip-8 instructions.
  * 
@@ -144,5 +145,6 @@ public:
 
     void reset();
 };
+}
 
 #endif

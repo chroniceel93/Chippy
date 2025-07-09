@@ -1,5 +1,7 @@
 #include "tehCPUS.h"
 
+using namespace chippy;
+
 /**
  * @brief Construct a new tehCPUS::tehCPUS object
  * 

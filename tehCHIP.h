@@ -4,21 +4,31 @@
 #include <chrono>
 #include <thread>
 
+#include "tehCOMMONZ.h"
+
 #include "tehROM.h"
 #include "tehBUS.h"
 #include "tehCPUS.h"
 
-class tehCHIP {
+namespace chippy {
+
+    class tehCHIP {
 private:
     tehROM *disk;
     tehBUS *bus;
     tehCPUS *processor;
-public:
-    enum systype {
-        CHIP8, SUPERCHIP
-    };
+    systype operating_mode;
 
-    tehCHIP(tehSCREEN& s, tehBEEP& b, tehBOOP& k);
+public:
+    /**
+     * @brief Initializes the Chip-8 interpreter.
+     * 
+     * @param s Reference to a screen object, to be used by the system.
+     * @param b Reference to a speaker object, to be used by the system.
+     * @param k Reference to an input object, to be used by the system.
+     * @param opMode Sets the quirks and operating mode of the system.
+     */
+    tehCHIP(tehSCREEN& s, tehBEEP& b, tehBOOP& k, systype opMode);
 
     // ~tehCHIP();
 
@@ -27,6 +37,7 @@ public:
     void execute();
 
     void reset_system();
-};
+    };
+}
 
 #endif

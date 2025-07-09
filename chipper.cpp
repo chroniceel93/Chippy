@@ -34,10 +34,10 @@ int WinMain(int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
 #endif
     chipperSDL* sdl;
-    tehCHIP* b;
+    chippy::tehCHIP* b;
 
     std::string romFileName = "";
-    tehCHIP::systype compat = tehCHIP::CHIP8; // we default to Chip-8 compat.
+    chippy::systype compat = chippy::CHIP8; // we default to Chip-8 compat.
  
     int choice = 0;
     // This loop iterates over every valid argument
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
                 } // else do_nothing();
                 break;
             case 's':
-                compat = tehCHIP::SUPERCHIP;
+                compat = chippy::SUPERCHIP;
                 break;
         }
     }
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
     } else {
         try {
             sdl = new chipperSDL();
-            b = new tehCHIP(*sdl, *sdl, *sdl);
+            b = new chippy::tehCHIP(*sdl, *sdl, *sdl, compat);
             b->load_program(romFileName);
             b->execute();
             std::cout << "Exiting program!";
