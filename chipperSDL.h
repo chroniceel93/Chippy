@@ -83,6 +83,12 @@ private:
     // Keep this one around always increasing (and looping), so we have
     //   a constant tone.
     unsigned int runningSampleIndex;
+
+    // Private initialization functions
+    bool init_SDL();
+    bool init_SDL_window();
+    bool init_renderer();
+    bool init_textures();
     
     // Private functions for audio handling.
     static void SDLAudioCallback(void *UserData, Uint8 *AudioData, int Length);

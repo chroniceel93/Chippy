@@ -22,6 +22,99 @@ void chipperSDL::SDLAudioCallback(void *UserData, Uint8 *AudioData, int Length) 
     return;
 }
 
+// Init SDL
+
+bool chipperSDL::init_SDL() {
+    bool result = true;
+    if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
+        throw SDL_GetError();
+        result = false;
+    } else {
+        if (this->init_SDL_window()) {
+            if (this->init_renderer()) {
+                if (!this->init_textures()) result = false;
+            } else {
+                result = false;
+            }
+
+        } else {
+            result = false;
+        }
+    }
+    return result;
+}
+
+bool chipperSDL::init_SDL_window() {
+    bool result = true;
+    // create window
+    this->window = SDL_CreateWindow(
+        "Chip-8"
+        , SDL_WINDOWPOS_CENTERED
+        , SDL_WINDOWPOS_CENTERED
+        , 512
+        , 256
+        , SDL_WINDOW_SHOWN
+    );
+    // if the SDL_CreateWindow fails, then the pointer *window will be null. 
+    // So, if the window == nullptr, then throw an error
+    if (this->window == NULL) {
+        throw SDL_GetError();
+        result = false;
+    }
+    return result;
+}
+
+bool chipperSDL::init_renderer() {
+    bool result = true;
+    // Attempt to create a renderer
+    // Keep flags at 0 - SDL selects hardware renderers first, and falls back to
+    // software if not available.
+    this->renderer = SDL_CreateRenderer(
+        this->window
+        , -1
+        , 0 
+    );
+
+    if (this->renderer == NULL) {
+        throw SDL_GetError();
+        result = false;
+    } 
+
+    return result;
+}
+
+
+bool chipperSDL::init_textures() {
+    bool result = true;
+
+    this->render_texture = SDL_CreateTexture(
+        this->renderer
+        , SDL_PIXELFORMAT_RGBA8888
+        , SDL_TEXTUREACCESS_STREAMING
+        , 64
+        , 32
+    );
+
+    SDL_SetTextureBlendMode(this->render_texture, SDL_BLENDMODE_BLEND);
+
+    this->fade_texture = SDL_CreateTexture(
+        this->renderer
+        , SDL_PIXELFORMAT_RGBA8888
+        , SDL_TEXTUREACCESS_TARGET
+        , 64
+        , 32
+    );
+
+    // If either texture is null, something is wrong. Throw an error and set
+    // result to false.
+    if (this->render_texture == NULL || this->fade_texture == NULL) {
+        throw SDL_GetError();
+        result = false;
+    }
+
+    return result;
+}
+
 
 chipperSDL::chipperSDL() {
     this->SDL_Status = true; // Assume SDL is good- Set to false if init fails
@@ -32,136 +125,80 @@ chipperSDL::chipperSDL() {
     this->foreground.g = 255;
     this->foreground.b = 255;
 
+    // We're setting the default dimensions to match the Chip-8 video buffer.
     this->texrect.x = 0;
     this->texrect.y = 0;
     this->texrect.w = 64;
     this->texrect.h = 32;
-
-    // init SDL
-    if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        throw SDL_GetError();
-        this->SDL_Status = false;
-    } else {
-        // create window
-        this->window = SDL_CreateWindow(
-            "Chip-8"
-            , SDL_WINDOWPOS_CENTERED
-            , SDL_WINDOWPOS_CENTERED
-            , 512
-            , 256
-            , SDL_WINDOW_SHOWN
+    // First and foremost, let's see if we can get SDL
+    this->SDL_Status = this->init_SDL();
+    // Now, let's check if SDL is up and running, and then init everything else.
+    if (this->SDL_Status) {
+        // Set the initial (background) drawing color.
+        SDL_SetRenderDrawColor(
+            this->renderer
+            , this->background.r
+            , this->background.g
+            , this->background.b
+            , 255
         );
-        // if the SDL_CreateWindow fails, then the pointer *window will be
-        // null. So, if the window == nullptr, then throw an error
-        if (this->window == NULL) {
-            throw SDL_GetError();
-            this->SDL_Status = false;
-        } else {
-            // Attempt to create a renderer
-            // Keep flags at 0 - SDL selects hardware renderers first, and
-            //   falls back to Software if not available. 
-            this->renderer = SDL_CreateRenderer(
-                this->window
-                , -1
-                , 0 
-            );
-            // Repeat the nullptr test with renderer
-            if (this->renderer == NULL) {
-                throw SDL_GetError();
-                this->SDL_Status = false;
-            } else {
-                // Set the default drawing color
-                SDL_SetRenderDrawColor(
-                    this->renderer
-                    , this->background.r
-                    , this->background.g
-                    , this->background.b
-                    , 255
-                );
+        // blank the screen
+        this->blank_screen();
 
-                // Initialize the render texture
-                this->render_texture = SDL_CreateTexture(
-                    this->renderer
-                    , SDL_PIXELFORMAT_RGBA8888
-                    , SDL_TEXTUREACCESS_STREAMING
-                    , 64
-                    , 32
-                );
+        //Present the renderer
+        SDL_RenderPresent(this->renderer);
 
-                this->fade_texture = SDL_CreateTexture(
-                    this->renderer
-                    , SDL_PIXELFORMAT_RGBA8888
-                    , SDL_TEXTUREACCESS_TARGET
-                    , 64
-                    , 32
-                );
+        // Init SDL input variables.
+        this->state = SDL_GetKeyboardState(NULL);
+        this->exit = false;
 
-                if (this->render_texture == NULL) {
-                    throw SDL_GetError();
-                }
+        // // Init SDL Audio subsystem
+        // SDL_InitSubSystem(SDL_INIT_AUDIO);
 
-                SDL_SetTextureBlendMode(this->render_texture, SDL_BLENDMODE_BLEND);
+        // Initialize class variables
+        this->runningSampleIndex = 0;
+        // Initialize, and allocate the RingBuffer.
+        this->buffer.Size = this->bufferSize;
+        this->buffer.writeCursor = 0;
+        this->buffer.playCursor = 0;
+        this->buffer.data = malloc(this->buffer.Size);
 
-                this->blank_screen();
-
-                //Present the renderer
-                SDL_RenderPresent(this->renderer);
-            }
+        // Zero out buffer
+        for (int i = 0; i < this->buffer.Size ; i++) {
+            // Cast the pointer to Uint8, offset by i, and dereference
+            *((Uint8*)this->buffer.data + i) = 0;
         }
+
+        // We fill audioSettings with the values we want, and pass that to SDL.
+        // Once SDL's opened the audio device, it replaces these values with
+        // what it is actually using.
+        this->audioSettings.freq = this->samplesPerSecond;
+        this->audioSettings.format = AUDIO_S16LSB;
+        this->audioSettings.channels = 2;
+        this->audioSettings.samples = this->sampleCount;
+        this->audioSettings.callback = this->SDLAudioCallback;
+        this->audioSettings.userdata = (void*)&this->buffer;
+        this->deviceID = SDL_OpenAudioDevice(NULL // Device: Null = default
+                            , 0 // iscapture: 0 = output device
+                            , &this->audioSettings // Pointer to audioSettings
+                            , 0 // Used to return audioSettings struct.
+                            , SDL_AUDIO_ALLOW_ANY_CHANGE);
+        
+        // Some of the math we're doing here *counts* on us using the S16LSB 
+        // format. It'll still run if we don't have that, but it might sound 
+        // pretty wild. Print out an error in this case, so we know why your 
+        // speakers are cracklin'.
+        if (this->audioSettings.format != AUDIO_S16LSB) {
+            SDL_LogMessage(0, SDL_LOG_PRIORITY_CRITICAL, 
+                "Unexpected Audio Format.");
+        }
+
+        // SDL initially stops audio playback. This resumes it.
+        SDL_PauseAudioDevice(this->deviceID, 0);
     }
-
-    // Init SDL input variables.
-    this->state = SDL_GetKeyboardState(NULL);
-    this->exit = false;
-
-    // Init SDL Audio subsystem
-    SDL_InitSubSystem(SDL_INIT_AUDIO);
-
-    // Initialize class variables
-    this->runningSampleIndex = 0;
-    // Initialize, and allocate the RingBuffer.
-    this->buffer.Size = this->bufferSize;
-    this->buffer.writeCursor = 0;
-    this->buffer.playCursor = 0;
-    this->buffer.data = malloc(this->buffer.Size);
-
-    // Zero out buffer
-    for (int i = 0; i < this->buffer.Size ; i++) {
-        // Cast the pointer to Uint8, offset by i, and dereference
-        *((Uint8*)this->buffer.data + i) = 0;
-    }
-
-    // We fill audioSettings with the values we want, and pass that to SDL.
-    // Once SDL's opened the audio device, it replaces these values with what it
-    //  is actually using.
-    this->audioSettings.freq = this->samplesPerSecond;
-    this->audioSettings.format = AUDIO_S16LSB;
-    this->audioSettings.channels = 2;
-    this->audioSettings.samples = this->sampleCount;
-    this->audioSettings.callback = this->SDLAudioCallback;
-    this->audioSettings.userdata = (void*)&this->buffer;
-    this->deviceID = SDL_OpenAudioDevice(NULL // Device: Null = default
-                        , 0 // iscapture: 0 = output device
-                        , &this->audioSettings // Pointer to audioSettings
-                        , 0 // Used to return audioSettings struct.
-                        , SDL_AUDIO_ALLOW_ANY_CHANGE);
     
-    // Some of the math we're doing here *counts* on us using the S16LSB format.
-    // It'll still run if we don't have that, but it might sound pretty wild.
-    // Print out an error in this case, so we know why your speakers are 
-    //  cracklin'.
-    if (this->audioSettings.format != AUDIO_S16LSB) {
-        SDL_LogMessage(0, SDL_LOG_PRIORITY_CRITICAL, 
-            "Unexpected Audio Format.");
-    }
-
-    // SDL initially stops audio playback. This resumes it.
-    SDL_PauseAudioDevice(this->deviceID, 0);
     return;
 }
-
-// Draw normal texture
-// 
 
 
 chipperSDL::~chipperSDL() {
