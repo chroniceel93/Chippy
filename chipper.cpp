@@ -112,6 +112,8 @@ int main(int argc, char *argv[]) {
             std::cout << "Out of range error: " << e.what() << std::endl;
         } catch (const std::exception &e) {
             std::cout << "Exception: " << e.what() << std::endl;
+        } catch (const char* &e) {
+            std::cout << "Exception: " << e << std::endl;
         }
     }
 
