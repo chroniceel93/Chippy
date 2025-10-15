@@ -90,6 +90,8 @@ private:
     bool init_SDL_window();
     bool init_renderer();
     bool init_textures();
+
+    void delete_textures();
     
     // Private functions for audio handling.
     static void SDLAudioCallback(void *UserData, Uint8 *AudioData, int Length);

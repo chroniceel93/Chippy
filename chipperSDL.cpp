@@ -83,7 +83,6 @@ bool chipperSDL::init_renderer() {
     return result;
 }
 
-
 bool chipperSDL::init_textures() {
     bool result = true;
 
@@ -115,6 +114,11 @@ bool chipperSDL::init_textures() {
     return result;
 }
 
+void chipperSDL::delete_textures() {
+    SDL_DestroyTexture(this->render_texture);
+    SDL_DestroyTexture(this->fade_texture);
+    return;
+}
 
 chipperSDL::chipperSDL() {
     this->SDL_Status = true; // Assume SDL is good- Set to false if init fails
@@ -291,6 +295,8 @@ void chipperSDL::refresh_screen() {
 void chipperSDL::set_resolution(int h, int w) {
     this->vbuf_w = w;
     this->vbuf_h = h;
+    this->delete_textures();
+    this->init_textures();
     return;
 }
 
