@@ -26,6 +26,7 @@ private:
     SDL_Renderer *renderer; // Pointer to the renderer.
     SDL_Color background, foreground; // TODO: use these to replace hardcoded values
     SDL_Rect texrect;
+    int vbuf_h, vbuf_w;
 
     // Variables used for tehBOOP
     SDL_Event input; // input queue
@@ -102,6 +103,7 @@ public:
     void blank_screen();
     bool draw_point(int x, int y);
     void refresh_screen();
+    void set_resolution(int h, int w);
 
     // Implemented from tehBOOP
     virtual void process_events();

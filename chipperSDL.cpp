@@ -91,8 +91,8 @@ bool chipperSDL::init_textures() {
         this->renderer
         , SDL_PIXELFORMAT_RGBA8888
         , SDL_TEXTUREACCESS_STREAMING
-        , 64
-        , 32
+        , this->vbuf_w
+        , this->vbuf_h
     );
 
     SDL_SetTextureBlendMode(this->render_texture, SDL_BLENDMODE_BLEND);
@@ -101,8 +101,8 @@ bool chipperSDL::init_textures() {
         this->renderer
         , SDL_PIXELFORMAT_RGBA8888
         , SDL_TEXTUREACCESS_TARGET
-        , 64
-        , 32
+        , this->vbuf_w
+        , this->vbuf_h
     );
 
     // If either texture is null, something is wrong. Throw an error and set
@@ -125,11 +125,14 @@ chipperSDL::chipperSDL() {
     this->foreground.g = 255;
     this->foreground.b = 255;
 
+    this->vbuf_w = 64;
+    this->vbuf_h = 32;
+
     // We're setting the default dimensions to match the Chip-8 video buffer.
     this->texrect.x = 0;
     this->texrect.y = 0;
-    this->texrect.w = 64;
-    this->texrect.h = 32;
+    this->texrect.w = this->vbuf_w;
+    this->texrect.h = this->vbuf_h;
     // First and foremost, let's see if we can get SDL
     this->SDL_Status = this->init_SDL();
     // Now, let's check if SDL is up and running, and then init everything else.
@@ -235,12 +238,12 @@ bool chipperSDL::draw_point(int x, int y) {
     //     y = y % 32;
     // }
 
-    int pixel_offset = (y * 64) + x;
+    int pixel_offset = (y * this->vbuf_w) + x;
 
     // if (pixel_offset > 2047) {
     //     pixel_offset = pixel_offset % 2048;
     // }
-    if ((x < 64) && (y < 32)) { // test if clipping is on
+    if ((x < this->vbuf_w) && (y < this->vbuf_h)) { // test if clipping is on
         // Pixel data is 0xRRGGBBAA
         if (this->pixels[pixel_offset] == 0xFFFFFFFF) {
 // The 0x31 alpha value was chosen more or less at random. I just needed the 
@@ -260,13 +263,13 @@ void chipperSDL::refresh_screen() {
     // Set texture dimensions
     this->texrect.x = 0;
     this->texrect.y = 0;
-    this->texrect.w = 64;
-    this->texrect.h = 32;
+    this->texrect.w = this->vbuf_w;
+    this->texrect.h = this->vbuf_h;
     // Update texture with updated values
 // Normally you would want to stream the texture, but I found that there's
 // quite a lot more overhead with textures this small, than simply updating
 // it.    
-    SDL_UpdateTexture(this->render_texture, NULL, this->pixels, 4 * 64);
+    SDL_UpdateTexture(this->render_texture, NULL, this->pixels, 4 * this->vbuf_w);
     
     // Create rects for blit
     SDL_Rect dstrect;
@@ -282,6 +285,13 @@ void chipperSDL::refresh_screen() {
     SDL_SetRenderTarget(this->renderer, NULL);
     SDL_RenderCopy(this->renderer, this->fade_texture, &this->texrect, &dstrect);
     SDL_RenderPresent(this->renderer);
+    return;
+}
+
+void chipperSDL::set_resolution(int h, int w) {
+    this->vbuf_w = w;
+    this->vbuf_h = h;
+    return;
 }
 
 // Implemented from tehBOOP
@@ -434,3 +444,5 @@ void chipperSDL::SoundTick(bool mute) {
     SDL_UnlockAudioDevice(this->deviceID);
     return;
 }
+
+

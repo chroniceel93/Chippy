@@ -67,6 +67,11 @@ public:
  * 
  */
     virtual void blank_screen() = 0;
+
+/**
+ * @brief Sets the resolution of the video buffer.
+ */
+    virtual void set_resolution(int h, int w) = 0;
 };
 
 #endif
