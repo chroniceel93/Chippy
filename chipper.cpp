@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
             b = new chippy::tehCHIP(*sdl, *sdl, *sdl, compat);
             b->load_program(romFileName);
             b->execute();
-            std::cout << "Exiting program!";
+            std::cout << "Exiting program!" << std::endl;
             delete b;
             delete sdl;
         } catch (const std::out_of_range &e) {
