@@ -19,7 +19,7 @@ class chipperSDL: public tehSCREEN, public tehBOOP, public tehBEEP {
 private:
     // Variables used for tehSCREEN
     bool SDL_Status; // Hold copy of SDL Status code.
-    uint32_t pixels[2048]; // Array of pixels used to build display texture.
+    uint32_t *pixel_array; // Array of pixels used to build display texture.
     SDL_Window *window; // Pointer to our window.
     SDL_Texture *render_texture; // Pointer to the render texture.
     SDL_Texture *fade_texture;
@@ -90,8 +90,10 @@ private:
     bool init_SDL_window();
     bool init_renderer();
     bool init_textures();
+    void init_pixel_array();
 
     void delete_textures();
+    void delete_pixel_array();
     
     // Private functions for audio handling.
     static void SDLAudioCallback(void *UserData, Uint8 *AudioData, int Length);
