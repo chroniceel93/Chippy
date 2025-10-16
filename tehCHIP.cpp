@@ -5,7 +5,7 @@ using namespace chippy;
 tehCHIP::tehCHIP(tehSCREEN& s, tehBEEP& b, tehBOOP& k, systype opMode) {
     this->operating_mode = opMode;
     this->bus = new tehBUS(s, b, k);
-    this->processor = new tehCPUS(*this->bus);
+    this->processor = new tehCPUS(*this->bus, opMode);
     this->disk = NULL;
     this->reset_system();
     return;

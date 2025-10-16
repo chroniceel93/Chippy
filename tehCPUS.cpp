@@ -9,10 +9,11 @@ using namespace chippy;
  * 
  * @param bus pointer to the Chip8 bus object.
  */
-tehCPUS::tehCPUS(tehBUS& bus) {
+tehCPUS::tehCPUS(tehBUS& bus, systype opMode) {
     this->reset();
     this->bus = &bus;
     this->vblank_quirk_block = false;
+    this->target = opMode;
     this->dist.param(
         std::uniform_int_distribution<unsigned char>::param_type(0x0, 0xF));
 }

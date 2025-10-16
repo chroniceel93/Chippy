@@ -15,6 +15,7 @@
 #include <stdexcept>
 
 #include "tehBUS.h"
+#include "tehCOMMONZ.h"
 
 namespace chippy {
 /**
@@ -48,6 +49,7 @@ private:
     tehBUS* bus;
 
     bool vblank_quirk_block;
+    systype target;
     // If true, PC stops advancing. Instructions that set this to true should
     //   eventually resuem.
     bool haltPC; 
