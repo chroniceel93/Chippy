@@ -239,6 +239,12 @@ void tehCPUS::decode_hex_0(unsigned short int inst) {
     case 0x00EE: // RET
         this->RET();
         break;
+    case 0x00FE: // DHI
+        this->DHI();
+        break;
+    case 0x00FF: // HIR
+        this->HIR();
+        break;
     default:
         // STUB - Calls subroutine in RCA 1802 microprocessor. Not emulated.
         break;
@@ -400,6 +406,20 @@ void tehCPUS::RET() {
         this->PC = this->stackFile[this->SPreg];
         this->stackFile[this->SPreg] = 0;
     }
+    return;
+}
+
+void tehCPUS::DHI() {
+    if (this->target == chippy::SUPERCHIP) {
+        this->bus->set_resolution(64, 32);
+    } // else {do_nothing}
+    return;
+}
+
+void tehCPUS::HIR() {
+    if (this->target == chippy::SUPERCHIP) {
+        this->bus->set_resolution(128, 64);
+    } // else {do_nothing}
     return;
 }
 

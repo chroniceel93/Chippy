@@ -81,8 +81,10 @@ private:
 
     // 0x0 Block
     void decode_hex_0(unsigned short int inst);
-    void CLS  ();
-    void RET  ();
+    void CLS  (); // 0x00E0
+    void RET  (); // 0x00EE
+    void DHI  (); // 0x00FE
+    void HIR  (); // 0x00FF
     // 0x1 Block
     void JP   (unsigned short int inst);
     // 0x2 Block
@@ -135,7 +137,7 @@ private:
     void LOADN(unsigned short int inst);
 
 public:
-    tehCPUS(tehBUS& bus);
+    tehCPUS(tehBUS& bus, systype opMode);
 
     bool halt();
 
