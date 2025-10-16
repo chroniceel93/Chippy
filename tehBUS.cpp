@@ -7,6 +7,14 @@ tehBUS::tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k)
     this->speakerState = true; // start muted
 }
 
+void tehBUS::clock_bus() {
+    this->keyboard.process_events();
+    this->screen.refresh_screen();
+    this->speaker.SoundTick(this->speakerState);
+    this->speakerState = true;
+    return;
+}
+
 bool tehBUS::get_exit_state() {
     return this->keyboard.get_exit_state();
 }
@@ -62,23 +70,18 @@ bool tehBUS::copy_sprite(int x, int y, short int addr, int len) {
     return flipped;
 }
 
-void tehBUS::clock_bus() {
-    this->keyboard.process_events();
-    this->screen.refresh_screen();
-    this->speaker.SoundTick(this->speakerState);
-    this->speakerState = true;
-    return;
-}
 
-void tehBUS::screm() {
-    this->speakerState = false;
-}
-
-bool tehBUS::test_key(unsigned char value) {
-    return this->keyboard.is_key_pressed(value);
-}
 
 unsigned char tehBUS::get_key() {
     return this->keyboard.get_key_pressed();
 }
 
+
+bool tehBUS::test_key(unsigned char value) {
+    return this->keyboard.is_key_pressed(value);
+}
+
+
+void tehBUS::screm() {
+    this->speakerState = false;
+}

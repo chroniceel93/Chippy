@@ -21,24 +21,24 @@ private:
 public:
     tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k);
     
+    void clock_bus();
     bool get_exit_state();
 
+    // Memory
     unsigned char read_ram(int addr);
-
     void write_ram(int addr, unsigned char val);
 
+    // Video
     void blank_screen();
-    
+    void set_resolution();
     bool copy_sprite(int x, int y, short int addr, int len);
 
-    void clock_bus();
-
-    void screm();
-
+    // Input
+    unsigned char get_key();
     bool test_key(unsigned char value);
 
-    unsigned char get_key();
-    
+    // Audio
+    void screm();
 };
 
 #endif
