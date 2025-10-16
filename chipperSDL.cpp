@@ -292,12 +292,20 @@ void chipperSDL::refresh_screen() {
     return;
 }
 
-void chipperSDL::set_resolution(int h, int w) {
+void chipperSDL::set_resolution(int w, int h) {
     this->vbuf_w = w;
     this->vbuf_h = h;
     this->delete_textures();
     this->init_textures();
     return;
+}
+
+int chipperSDL::get_width() {
+    return this->vbuf_w;
+}
+
+int chipperSDL::get_height() {
+    return this->vbuf_h;
 }
 
 // Implemented from tehBOOP
