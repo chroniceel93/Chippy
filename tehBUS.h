@@ -18,6 +18,9 @@ private:
 
     bool speakerState;
 
+    int screen_width;
+    int screen_height;
+
 public:
     tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k);
     
@@ -30,7 +33,7 @@ public:
 
     // Video
     void blank_screen();
-    void set_resolution();
+    void set_resolution(int w, int h);
     bool copy_sprite(int x, int y, short int addr, int len);
 
     // Input

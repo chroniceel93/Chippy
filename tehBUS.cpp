@@ -5,6 +5,8 @@ tehBUS::tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k)
                  , keyboard(k)
                  , speaker(b) {
     this->speakerState = true; // start muted
+    this->screen_width = this->screen.get_width();
+    this->screen_height = this->screen.get_height();
 }
 
 void tehBUS::clock_bus() {
@@ -33,18 +35,24 @@ void tehBUS::blank_screen() {
     return;
 }
 
+void tehBUS::set_resolution(int w, int h) {
+    this->screen.set_resolution(w, h);
+    this->screen_width = w;
+    this->screen_height = h;
+    return;
+}
 
 // Why x + 6 - shift, when shift gets up to 7?
 // x = 0. +6 = 6. 6-0 = 6. 6-1=5. 6-2=4. 6-3=3. 6-4=2. 6-5=1. 6-6=0.
 // ... *OH WAIT*. len is variable. Duh.
 // I was accidentally hardcoding the correct solution for a single case.
 bool tehBUS::copy_sprite(int x, int y, short int addr, int len) {
-    if (x > 63) {
-        x %= 64;
+    if (x > (this->screen_width - 1)) {
+        x %= this->screen_width;
     }
 
-    if (y > 31) {
-        y %= 32;
+    if (y > (this->screen_height - 1)) {
+        y %= this->screen_height;
     }
     unsigned char line;
     int shift = 0; // count how many times we've shifted.
@@ -70,17 +78,13 @@ bool tehBUS::copy_sprite(int x, int y, short int addr, int len) {
     return flipped;
 }
 
-
-
 unsigned char tehBUS::get_key() {
     return this->keyboard.get_key_pressed();
 }
 
-
 bool tehBUS::test_key(unsigned char value) {
     return this->keyboard.is_key_pressed(value);
 }
-
 
 void tehBUS::screm() {
     this->speakerState = false;
