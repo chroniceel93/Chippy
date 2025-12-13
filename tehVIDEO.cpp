@@ -6,7 +6,7 @@ tehVIDEO::tehVIDEO(tehSCREEN& s, chippy::systype sys) {
     this->system = sys;
 
     this->init_pixel_array();
-    this->pixel_doubling = this->system == chippy::SUPERCHIP ? true : false;
+    this->pixel_doubling = this->system == chippy::SUPERCHIP10 ? true : false;
 }
 
 tehVIDEO::~tehVIDEO() {
@@ -20,7 +20,7 @@ void tehVIDEO::init_pixel_array() {
             this->fb_height = 32;
             this->fb_width = 64;
             break;
-        case chippy::SUPERCHIP:
+        case chippy::SUPERCHIP10:
             this->fb_height = 64;
             this->fb_width = 128;
             break;

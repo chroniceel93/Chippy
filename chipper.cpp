@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
                 } // else do_nothing();
                 break;
             case 's':
-                compat = chippy::SUPERCHIP;
+                compat = chippy::SUPERCHIP10;
                 break;
         }
     }

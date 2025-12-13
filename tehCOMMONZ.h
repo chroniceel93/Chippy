@@ -3,7 +3,7 @@
 
 namespace chippy{ 
     enum systype {
-        CHIP8, SUPERCHIP
+        CHIP8, CHIP48, SUPERCHIP10
     };
 }
 
