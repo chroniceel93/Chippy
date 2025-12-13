@@ -64,6 +64,25 @@ unsigned short int tehCPUS::bitsNN(T data) {
     return data & 0x00FF;
 }
 
+std::string tehCPUS::get_hex_instruction(unsigned short int inst) {
+    std::string instruction = "";
+    int temp[4];
+    temp[0] = this->bitN(inst, 3);
+    temp[1] = this->bitN(inst, 2);
+    temp[2] = this->bitN(inst, 1);
+    temp[3] = this->bitN(inst, 0);
+    for (auto i = 0; i < 4; i++) {
+        instruction += (temp[i] > 0x9) ? temp[i] + 0x37 : temp[i] + 0x30;
+    }
+    return instruction;
+}
+
+std::string tehCPUS::build_unknown_instruction_error(unsigned short int inst) {
+    std::string result = 
+        "No instruction 0x" + get_hex_instruction(inst) + " exists";
+    return result;
+}
+
 // NO HALTING MECHANISM PRESENT
 bool tehCPUS::halt() {
     return false;
@@ -203,17 +222,8 @@ void tehCPUS::decode_and_execute(unsigned short int inst) {
         this->decode_hex_F(inst);
         break;
     default:
-        strcpy(err, "No instruction 0x");
-        tmp = this->bitN(inst, 3);
-        err[18] = (tmp > 0x9) ? tmp + 0x41 : tmp + 0x30;
-        tmp = this->bitN(inst, 2); 
-        err[19] = (tmp > 0x9) ? tmp + 0x41 : tmp + 0x30;
-        tmp = this->bitN(inst, 1);
-        err[20] = (tmp > 0x9) ? tmp + 0x41 : tmp + 0x30;
-        tmp = this->bitN(inst, 0);
-        err[21] = (tmp > 0x9) ? tmp + 0x41 : tmp + 0x30;
-        strcat(err, " exists");
-        throw std::out_of_range(err);
+        // throw std::out_of_range(build_unknown_instruction_error(inst).c_str());
+        std::cout << build_unknown_instruction_error(inst) << std::endl;
         break;
     }
     return;
@@ -290,11 +300,8 @@ void tehCPUS::decode_hex_8(unsigned short int inst) {
         break;
     default:
         // Malformed instruction - Throw error
-        strcpy(err, "No instruction 0x8XY");
-        tmp = this->bitN(inst, 0);
-        err[21] = (tmp > 0x9) ? tmp + 0x41 : tmp + 0x30;
-        strcat(err, " exists");
-        throw std::out_of_range(err);
+        // throw std::out_of_range(build_unknown_instruction_error(inst).c_str());
+        std::cout << build_unknown_instruction_error(inst) << std::endl;
         break;
     }
     return;
@@ -319,13 +326,8 @@ void tehCPUS::decode_hex_E(unsigned short int inst) {
         this->SKNP(inst);
         break;
     default: // NOOP
-        strcpy(err, "No instruction 0xEx");
-        tmp = this->bitN(inst, 1);
-        err[20] = (tmp > 0x9) ? tmp + 0x41 : tmp + 0x30;
-        tmp = this->bitN(inst, 0);
-        err[21] = (tmp > 0x9) ? tmp + 0x41 : tmp + 0x30;
-        strcat(err, " exists");
-        throw std::out_of_range(err);
+        // throw std::out_of_range(build_unknown_instruction_error(inst).c_str());
+        std::cout << build_unknown_instruction_error(inst) << std::endl;
         break;
     }
     return;
@@ -369,6 +371,8 @@ void tehCPUS::decode_hex_F(unsigned short int inst) {
         this->LOADN(inst);
         break;
     default: // NOOP
+        // throw std::out_of_range(build_unknown_instruction_error(inst).c_str());
+        std::cout << build_unknown_instruction_error(inst) << std::endl;
         break;
     }
 }

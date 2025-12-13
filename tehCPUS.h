@@ -11,8 +11,10 @@
 #define TEHCPUS_H_
 
 #include <cstring>
+#include <iostream>
 #include <random>
 #include <stdexcept>
+#include <string>
 
 #include "tehBUS.h"
 #include "tehCOMMONZ.h"
@@ -76,6 +78,11 @@ private:
 
     template<class T>
     unsigned short int bitsNN(T data);
+
+    std::string get_hex_instruction(unsigned short int inst);
+
+    // Generates string containing opcode for an unknown instructin
+    std::string build_unknown_instruction_error(unsigned short int inst);
 
     void decode_and_execute(unsigned short int inst);
 
