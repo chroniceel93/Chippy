@@ -6,14 +6,14 @@
  * @date 2025-05-23
  */
 
+#ifndef CHIPPERSDL_H_
+#define CHIPPERSDL_H_
+
 #include "tehSCREEN.h"
 #include "tehBOOP.h"
 #include "tehBEEP.h"
 #include "SDL.h"
 #include "SDL_audio.h"
-
-#ifndef CHIPPERSDL_H_
-#define CHIPPERSDL_H_
 
 class chipperSDL: public tehSCREEN, public tehBOOP, public tehBEEP {
 private:
