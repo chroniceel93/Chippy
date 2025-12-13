@@ -104,12 +104,14 @@ public:
     ~chipperSDL();
 
     // Implemented from tehSCREEN
-    void blank_screen();
-    bool draw_point(int x, int y);
+    // void blank_screen();
+    // bool draw_point(int x, int y);
+    void copy_screen(bool* data, int size);
     void refresh_screen();
     void set_resolution(int w, int h);
     int get_width();
     int get_height();
+
 
     // Implemented from tehBOOP
     virtual void process_events();

@@ -1,7 +1,9 @@
 #ifndef TEHBUS_H_
 #define TEHBUS_H_
 
+#include "tehCOMMONZ.h"
 #include "tehRAMS.h"
+#include "tehVIDEO.h"
 #include "tehSCREEN.h"
 #include "tehBOOP.h"
 #include "tehBEEP.h"
@@ -11,18 +13,17 @@ private:
 // This should be given to the class from somewhere else.
 // tehCHIP would make some sense, but it feels messy.
     // chipperSDL chipper_sdl;
-    tehRAMS memory;
+    tehRAMS* memory;
+    tehVIDEO* framebuffer;
     tehSCREEN& screen;
     tehBEEP& speaker;
     tehBOOP& keyboard;
-
     bool speakerState;
 
-    int screen_width;
-    int screen_height;
+    chippy::systype system;
 
 public:
-    tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k);
+    tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k, chippy::systype sys = chippy::CHIP8);
     
     void clock_bus();
     bool get_exit_state();
@@ -33,7 +34,7 @@ public:
 
     // Video
     void blank_screen();
-    void set_resolution(int w, int h);
+    void set_video_mode(bool mode);
     bool copy_sprite(int x, int y, short int addr, int len);
 
     // Input

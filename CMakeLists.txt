@@ -21,6 +21,7 @@ set(SOURCE_FILES
     tehCPUS.cpp
     tehRAMS.cpp
     tehROM.cpp
+    tehVIDEO.cpp
     chipperSDL.cpp
 )
 

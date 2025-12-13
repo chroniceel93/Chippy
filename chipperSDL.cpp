@@ -143,7 +143,7 @@ chipperSDL::chipperSDL() {
     this->foreground.r = 255;
     this->foreground.g = 255;
     this->foreground.b = 255;
-
+    // Sane defaults, but expect these to be overidden later on
     this->vbuf_w = 64;
     this->vbuf_h = 32;
 
@@ -166,10 +166,10 @@ chipperSDL::chipperSDL() {
         );
 
         // Allocate pixel array
-        this->init_pixel_array();
+        // this->init_pixel_array();
 
         // blank the screen
-        this->blank_screen();
+        // this->blank_screen();
 
         //Present the renderer
         SDL_RenderPresent(this->renderer);
@@ -236,7 +236,7 @@ chipperSDL::~chipperSDL() {
     SDL_DestroyWindow(this->window);
     SDL_DestroyTexture(this->render_texture);
     SDL_DestroyTexture(this->fade_texture);
-    this->delete_pixel_array();
+    // this->delete_pixel_array();
     this->renderer = NULL;
     this->window = NULL;
     this->render_texture = NULL;
@@ -244,43 +244,12 @@ chipperSDL::~chipperSDL() {
     return;
 }
 
-void chipperSDL::blank_screen() {
-    for (int i = 0; i < 2048; i++) {
-        this->pixel_array[i] = 0x000000FF;
+void chipperSDL::copy_screen(bool* data, int size) {
+    // Build uint32_t array
+    for (auto i = 0; i < size; i++) {
+        this->pixel_array[i] = data[i] ? 0xFFFFFFFF : 0x000000FF;
     }
     return;
-}
-
-bool chipperSDL::draw_point(int x, int y) {
-        bool flipped = false;
-    // Logic for if clipping is off.
-    // if (x > 63) {
-    //     x = x % 64;
-    // }
-
-    // if (y > 31) {
-    //     y = y % 32;
-    // }
-
-    int pixel_offset = (y * this->vbuf_w) + x;
-
-    // if (pixel_offset > 2047) {
-    //     pixel_offset = pixel_offset % 2048;
-    // }
-    if ((x < this->vbuf_w) && (y < this->vbuf_h)) { // test if clipping is on
-        // Pixel data is 0xRRGGBBAA
-        if (this->pixel_array[pixel_offset] == 0xFFFFFFFF) {
-// The 0x31 alpha value was chosen more or less at random. I just needed the 
-// black pixels to have some transparency so that, when this new texture is 
-// blended with the render copy, white pixels will slowly fade out. This
-// provides us our screen-burn effect!
-            this->pixel_array[pixel_offset] = 0x00000031;
-            flipped = true;
-        } else {
-            this->pixel_array[pixel_offset] = 0xFFFFFFFF;
-        }
-    } // else, do_nothing();
-    return flipped;
 }
 
 void chipperSDL::refresh_screen() {
@@ -292,7 +261,8 @@ void chipperSDL::refresh_screen() {
     // Update texture with updated values
 // Normally you would want to stream the texture, but I found that there's
 // quite a lot more overhead with textures this small, than simply updating
-// it.    
+// it.   
+    // TODO: Method to grab data from vram
     SDL_UpdateTexture(this->render_texture, NULL, this->pixel_array, 4 * this->vbuf_w);
     
     // Create rects for blit

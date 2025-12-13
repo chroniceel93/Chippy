@@ -411,14 +411,16 @@ void tehCPUS::RET() {
 
 void tehCPUS::DHI() {
     if (this->target == chippy::SUPERCHIP) {
-        this->bus->set_resolution(64, 32);
+        this->bus->set_video_mode(true);
+        // this->bus->set_resolution(64, 32);
     } // else {do_nothing}
     return;
 }
 
 void tehCPUS::HIR() {
     if (this->target == chippy::SUPERCHIP) {
-        this->bus->set_resolution(128, 64);
+        this->bus->set_video_mode(false);
+        // this->bus->set_resolution(128, 64);
     } // else {do_nothing}
     return;
 }
