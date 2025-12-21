@@ -54,22 +54,20 @@ void tehBUS::set_video_mode(bool mode) {
 // I was accidentally hardcoding the correct solution for a single case.
 bool tehBUS::copy_sprite(int x, int y, short int addr, int len) {
     // If pixel doubling in effect - set scaling factor
-    int scaling = this->framebuffer->get_video_mode() ? 1 : 2;
-
+    int scaling = this->framebuffer->get_video_mode() ? 2 : 1;
+    // Apply scaling factor to screen dimensions and coordinates
     int screen_width = this->framebuffer->get_framebuffer_width() / scaling;
     int screen_height = this->framebuffer->get_framebuffer_height() / scaling;
 
-    int xpos = x;
-    int ypos = y;
+    int xpos = x / scaling;
+    int ypos = y / scaling;
 
-    if (x > (screen_width - 1)) {
+    if (xpos > (screen_width - 1)) {
         xpos %= screen_width;
-        xpos /= scaling;
     }
 
-    if (y > (screen_height - 1)) {
+    if (ypos > (screen_height - 1)) {
         ypos %= screen_height;
-        ypos /= scaling;
     }
 
     unsigned char line;
@@ -82,7 +80,7 @@ bool tehBUS::copy_sprite(int x, int y, short int addr, int len) {
         line = this->memory->read_ram(addr+i);
         // Then iterate over the line, until there are no more high bits
         while (line > 0) { 
-            // If the highest bit is high- Then it is part of the sprite
+            // If the highest bit is high, then it is part of the sprite
             if (line & 0x1) {
                 if (this->framebuffer->draw_point(x + shift, y + i)) {
                     flipped = true;

@@ -831,16 +831,29 @@ void tehCPUS::RND(unsigned short int inst) {
  * Normally, this would be done manually in here, but offloading the task to a
  *   dedicated function in the BUS object makes sense to me since this is an 
  *   operation that reads from one device, and writes to another.
+ *
+ * SUPERCHIP 1.0
+ * DRAW Vx, Vy - (0xDxy0) 
+ * 
+ * This variant will draw a 16x16 size sprite.
  * 
  * @param inst 
  */
 void tehCPUS::DRAW(unsigned short int inst) {
-    if (this->bus->copy_sprite(
-        this->regFile[this->bitN(inst, 2)],
-        this->regFile[this->bitN(inst, 1)],
-        this->Ireg,
-        this->bitN(inst, 0)
-    )) {
+    int len = bitN(inst, 0);
+    int fetX = this->regFile[this->bitN(inst, 2)];
+    int fetY = this->regFile[this->bitN(inst, 1)];
+    int fetI = this->Ireg;
+
+    bool result = false;
+
+    if (len == 0 && this->target == chippy::SUPERCHIP10) {
+        result = this->bus->copy_sprite(fetX, fetY, fetI, 16);
+    } else {
+        result = this->bus->copy_sprite(fetX, fetY, fetI, len);
+    }
+
+    if (result) {
         this->regFile[0xF] = 1;
     } else {
         this->regFile[0xF] = 0;
@@ -866,7 +879,7 @@ void tehCPUS::SKP(unsigned short int inst) {
 /**
  * @brief Skip if Key Not Pressed.
  * 
- * SKNP Vx - (0xExA1).
+ * SKNP Vx - (0xExA1)
  * 
  * @param inst 
  */

@@ -130,7 +130,7 @@ bool tehVIDEO::draw_double_point(int x, int y) {
     @brief controls pixel doubling
  **/
 void tehVIDEO::set_video_mode(bool mode) {
-    this->pixel_doubling;
+    this->pixel_doubling = mode;
     return;
 }
 
