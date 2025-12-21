@@ -20,6 +20,10 @@ void tehVIDEO::init_pixel_array() {
             this->fb_height = 32;
             this->fb_width = 64;
             break;
+        case chippy::CHIP48:
+            this->fb_height = 32;
+            this->fb_width = 64;
+            break;
         case chippy::SUPERCHIP10:
             this->fb_height = 64;
             this->fb_width = 128;

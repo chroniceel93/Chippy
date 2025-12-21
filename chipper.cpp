@@ -47,6 +47,7 @@ int main(int argc, char *argv[]) {
         static struct option long_options[] = {
             {"mute",        no_argument,        0,  'm'},
             {"fullscreen",  no_argument,        0,  'f'},
+            {"chip48",      no_argument,        0,  'p'},
             {"superchip",   no_argument,        0,  's'},
             {"rom",         required_argument,  0,  'r'},
             {"help",        no_argument,        0,  'h'},
@@ -81,6 +82,12 @@ int main(int argc, char *argv[]) {
                 break;
             case 's':
                 compat = chippy::SUPERCHIP10;
+                break;
+            case 'p':
+                compat = chippy::CHIP48;
+                break;
+            default:
+                // do_nothing();
                 break;
         }
     }

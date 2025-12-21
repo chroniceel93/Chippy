@@ -695,7 +695,9 @@ void tehCPUS::SHR(unsigned short int inst) {
     unsigned char regx = this->bitN(inst, 2);
     unsigned char regy = this->bitN(inst, 1);
     // CHIP-8 Quirk: Y is not copied in later interpreters.
+    if (this->target == chippy::CHIP8) {
     this->regFile[regx] = this->regFile[regy];
+    } // else do_nothing()
     // Save LSB, before shifting.
     unsigned char LSB = this->regFile[regx] & 0x1;
     this->regFile[regx] >>=1;
@@ -743,7 +745,9 @@ void tehCPUS::SHL(unsigned short int inst) {
     unsigned char regx = this->bitN(inst, 2);
     unsigned char regy = this->bitN(inst, 1);
     // CHIP-8 Quirk: Y is not copied in later interpreters.
+    if (this->target == chippy::CHIP8) {
     this->regFile[regx] = this->regFile[regy];
+    }
     // Save MSB, before shifting.
     unsigned char MSB = (this->regFile[regx] & 0x80) >> 7;
     this->regFile[regx] <<= 1;
@@ -795,7 +799,11 @@ void tehCPUS::LDI(unsigned short int inst) {
  * @param inst 
  */
 void tehCPUS::JPR(unsigned short int inst) {
+    if (this->target == chippy::CHIP8) {
     this->PC = this->regFile[0x0] + this->bitsNNN(inst) - 2;
+    } else if (this->target == chippy::CHIP48) {
+        this->PC = this->regFile[(int) this->bitN(inst, 2)] + this->bitsNN(inst) - 2;
+    }
     return;
 }
 
@@ -1025,6 +1033,10 @@ void tehCPUS::SAVEN(unsigned short int inst) {
         this->bus->write_ram(this->Ireg, this->regFile[i]);
         this->Ireg++;
     }
+    // Bug in CHIP48, SUPERCHIP10, SUPERCHIP 11, ireg off by one
+    if (this->target == chippy::CHIP48) {
+        this->Ireg--;
+    }
     return;
 }
 
@@ -1044,6 +1056,10 @@ void tehCPUS::LOADN(unsigned short int inst) {
     for (unsigned char i = 0; i <= tempX; i++) {
         this->regFile[i] = this->bus->read_ram(this->Ireg);
         this->Ireg++;
+    }
+        // Bug in CHIP48, SUPERCHIP10, SUPERCHIP 11, ireg off by one
+    if (this->target == chippy::CHIP48) {
+        this->Ireg--;
     }
     return;
 }
