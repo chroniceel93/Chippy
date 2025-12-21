@@ -6,7 +6,7 @@ tehVIDEO::tehVIDEO(tehSCREEN& s, chippy::systype sys) {
     this->system = sys;
 
     this->init_pixel_array();
-    this->pixel_doubling = this->system == chippy::SUPERCHIP10 ? true : false;
+    this->pixel_doubling = (this->system == chippy::SUPERCHIP10) ? true : false;
 }
 
 tehVIDEO::~tehVIDEO() {
@@ -88,18 +88,18 @@ bool tehVIDEO::draw_point(int x, int y) {
 
 bool tehVIDEO::draw_single_point(int x, int y) {
     bool flipped = false;
-    // Logic for if clipping is off.
-    // if (x > 63) {
-    //     x = x % 64;
-    // }
+    int xpos = x;
+    int ypos = y;
+    if (xpos > this->fb_width - 1) {
+        xpos = this->clip_wrap(xpos, this->fb_width);
+    }
 
-    // if (y > 31) {
-    //     y = y % 32;
-    // }
+    if (y > this->fb_height -1) {
+        ypos = this->clip_wrap(ypos, this->fb_height);
+    }
 
-    int pixel_offset = (y * this->fb_width) + x;
-
-    if ((x < this->fb_width) && (y < this->fb_height)) { // test if clipping is on
+    if ((xpos > -1) && (ypos > -1)) { 
+        int pixel_offset = (ypos * this->fb_width) + xpos;
         if (this->pixel_array[pixel_offset] == true) {
             this->pixel_array[pixel_offset] = false;
             flipped = true;
@@ -127,7 +127,17 @@ bool tehVIDEO::draw_double_point(int x, int y) {
     if (pixel_one || pixel_two || pixel_three || pixel_four) {
         flipped = true;
     }
-    return true;
+    return flipped;
+}
+
+int tehVIDEO::clip_wrap(int value, int edge) {
+    int result = 0;
+    if (false) {
+        result = value % edge;
+    } else {
+        result = -1;
+    }
+    return result;
 }
 
 /**

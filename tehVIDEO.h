@@ -24,6 +24,7 @@ private:
 
     bool draw_single_point(int x, int y);
     bool draw_double_point(int x, int y);
+    int clip_wrap(int value, int edge);
 public:
 
     tehVIDEO(tehSCREEN& s, chippy::systype sys = chippy::CHIP8);
