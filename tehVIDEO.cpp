@@ -90,11 +90,14 @@ bool tehVIDEO::draw_single_point(int x, int y) {
     bool flipped = false;
     int xpos = x;
     int ypos = y;
+
+    // Clip_wrap will set coords to -1 if clipping is on. In such cases, do not
+    // draw the pixel.
     if (xpos > this->fb_width - 1) {
         xpos = this->clip_wrap(xpos, this->fb_width);
     }
 
-    if (y > this->fb_height -1) {
+    if (y > this->fb_height - 1) {
         ypos = this->clip_wrap(ypos, this->fb_height);
     }
 

@@ -82,7 +82,7 @@ bool tehBUS::copy_sprite(int x, int y, short int addr, int len) {
         while (line > 0) { 
             // If the highest bit is high, then it is part of the sprite
             if (line & 0x1) {
-                if (this->framebuffer->draw_point(x + shift, y + i)) {
+                if (this->framebuffer->draw_point(xpos + shift, ypos + i)) {
                     flipped = true;
                 }
             }
