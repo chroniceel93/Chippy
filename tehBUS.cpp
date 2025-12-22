@@ -59,8 +59,8 @@ bool tehBUS::copy_sprite(int x, int y, short int addr, int len) {
     int screen_width = this->framebuffer->get_framebuffer_width() / scaling;
     int screen_height = this->framebuffer->get_framebuffer_height() / scaling;
 
-    int xpos = x / scaling;
-    int ypos = y / scaling;
+    int xpos = x;
+    int ypos = y;
 
     if (xpos > (screen_width - 1)) {
         xpos %= screen_width;
