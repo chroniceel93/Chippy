@@ -94,6 +94,17 @@ bool tehBUS::copy_sprite(int x, int y, short int addr, int len) {
     return flipped;
 }
 
+// TODO: implement this
+// TODO: move wrapping logic into its own function. I don't want to duplicate
+// that code.
+bool tehBUS::copy_large_sprite(int x, int y, short int addr) {
+    bool flipped = false;
+
+
+
+    return flipped;
+}
+
 unsigned char tehBUS::get_key() {
     return this->keyboard.get_key_pressed();
 }

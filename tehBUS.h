@@ -36,6 +36,7 @@ public:
     void blank_screen();
     void set_video_mode(bool mode);
     bool copy_sprite(int x, int y, short int addr, int len);
+    bool copy_large_sprite(int x, int y, short int addr);
 
     // Input
     unsigned char get_key();
