@@ -21,20 +21,21 @@ private:
 
     void init_pixel_array();
     void delete_pixel_array();
-
+    bool draw_point(int x, int y);
     bool draw_single_point(int x, int y);
     bool draw_double_point(int x, int y);
-    int clip_wrap(int value, int edge);
+    int apply_wrapping_logic(int value, int edge);
+    int apply_clipping_logic(int value, int edge);
 public:
 
     tehVIDEO(tehSCREEN& s, chippy::systype sys = chippy::CHIP8);
     ~tehVIDEO();
 
     void blank_screen();
-    bool draw_point(int x, int y);
+
     void set_video_mode(bool mode);
     void update_screen();
-
+    bool draw_sprite( int x, int y, int size, unsigned char (&memory)[16]);
     bool* get_framebuffer();
     int get_framebuffer_height();
     int get_framebuffer_width();

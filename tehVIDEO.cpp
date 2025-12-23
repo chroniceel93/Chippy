@@ -49,6 +49,47 @@ void tehVIDEO::blank_screen() {
     return;
 }
 
+// Why x + 6 - shift, when shift gets up to 7?
+// x = 0. +6 = 6. 6-0 = 6. 6-1=5. 6-2=4. 6-3=3. 6-4=2. 6-5=1. 6-6=0.
+// ... *OH WAIT*. len is variable. Duh.
+// I was accidentally hardcoding the correct solution for a single case.
+bool tehVIDEO::draw_sprite(int x, int y, int size, unsigned char (&memory)[16]) {
+    bool flipped = false;
+    
+    // If pixel doubling is in effect, set scaling factor.
+    int scaling = this->pixel_doubling ? 2 : 1;
+
+    // Apply scaling factor to screen dimensions
+    int width = this->fb_width / scaling;
+    int height = this->fb_height / scaling;
+
+    int xpos = this->apply_wrapping_logic(x, width);
+    int ypos = this->apply_wrapping_logic(y, height);
+    
+    unsigned char byte = ' ';
+    int shift = 0;
+    // for each byte
+        // read in the byte
+        // Then iterate over the line, until there are no more high bits
+            // If the highest bit is high, then it is part of the sprite
+    for (int i = 0 ; i < size ; i++) {
+        shift = 7;
+        byte = memory[i];
+        while (byte > 0) {
+            if (byte & 0x1) { 
+                if (this->draw_point(xpos + shift, ypos + i)) {
+                    flipped = true;
+                }
+            }
+            // Shift once, and loop.
+            shift--;
+            byte = byte >> 1;
+        }
+    }
+
+    return flipped;
+}
+
 /**
  * @brief XOR one pixel, and return whether any white pixels were flipped.
  * 
@@ -94,11 +135,11 @@ bool tehVIDEO::draw_single_point(int x, int y) {
     // Clip_wrap will set coords to -1 if clipping is on. In such cases, do not
     // draw the pixel.
     if (xpos > this->fb_width - 1) {
-        xpos = this->clip_wrap(xpos, this->fb_width);
+        xpos = this->apply_clipping_logic(xpos, this->fb_width);
     }
 
     if (y > this->fb_height - 1) {
-        ypos = this->clip_wrap(ypos, this->fb_height);
+        ypos = this->apply_clipping_logic(ypos, this->fb_height);
     }
 
     if ((xpos > -1) && (ypos > -1)) { 
@@ -133,7 +174,17 @@ bool tehVIDEO::draw_double_point(int x, int y) {
     return flipped;
 }
 
-int tehVIDEO::clip_wrap(int value, int edge) {
+int tehVIDEO::apply_wrapping_logic(int value, int edge) {
+    int result = 0;
+    if (value > edge) {
+        result = value % edge;
+    } else {
+        result = value;
+    }
+    return result;
+}
+
+int tehVIDEO::apply_clipping_logic(int value, int edge) {
     int result = 0;
     if (false) {
         result = value % edge;

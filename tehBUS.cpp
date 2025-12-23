@@ -41,67 +41,16 @@ void tehBUS::set_video_mode(bool mode) {
     this->framebuffer->set_video_mode(mode);
 }
 
-// void tehBUS::set_resolution(int w, int h) {
-//     this->screen.set_resolution(w, h);
-//     this->screen_width = w;
-//     this->screen_height = h;
-//     return;
-// }
-
-// Why x + 6 - shift, when shift gets up to 7?
-// x = 0. +6 = 6. 6-0 = 6. 6-1=5. 6-2=4. 6-3=3. 6-4=2. 6-5=1. 6-6=0.
-// ... *OH WAIT*. len is variable. Duh.
-// I was accidentally hardcoding the correct solution for a single case.
 bool tehBUS::copy_sprite(int x, int y, short int addr, int len) {
-    // If pixel doubling in effect - set scaling factor
-    int scaling = this->framebuffer->get_video_mode() ? 2 : 1;
-    // Apply scaling factor to screen dimensions and coordinates
-    int screen_width = this->framebuffer->get_framebuffer_width() / scaling;
-    int screen_height = this->framebuffer->get_framebuffer_height() / scaling;
-
-    int xpos = x;
-    int ypos = y;
-
-    if (xpos > (screen_width - 1)) {
-        xpos %= screen_width;
-    }
-
-    if (ypos > (screen_height - 1)) {
-        ypos %= screen_height;
-    }
-
-    unsigned char line;
-    int shift = 0; // count how many times we've shifted.
     bool flipped = false;
-    // for each byte -
+
+    // Copy memory containing sprite into bool array
+    unsigned char sprite[16] = {0};
     for (int i = 0; i < len ; i++) {
-        shift = 7;
-        // Read in the line
-        line = this->memory->read_ram(addr+i);
-        // Then iterate over the line, until there are no more high bits
-        while (line > 0) { 
-            // If the highest bit is high, then it is part of the sprite
-            if (line & 0x1) {
-                if (this->framebuffer->draw_point(xpos + shift, ypos + i)) {
-                    flipped = true;
-                }
-            }
-            // Shift once, and loop.
-            shift--;
-            line = line >> 1;
-        }
+        sprite[i] = this->memory->read_ram(addr+i);
     }
-    return flipped;
-}
 
-// TODO: implement this
-// TODO: move wrapping logic into its own function. I don't want to duplicate
-// that code.
-bool tehBUS::copy_large_sprite(int x, int y, short int addr) {
-    bool flipped = false;
-
-
-
+    flipped = this->framebuffer->draw_sprite(x, y, len, sprite);
     return flipped;
 }
 

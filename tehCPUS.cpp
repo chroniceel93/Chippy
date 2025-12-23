@@ -856,7 +856,7 @@ void tehCPUS::DRAW(unsigned short int inst) {
     bool result = false;
 
     if (len == 0 && this->target == chippy::SUPERCHIP10) {
-        result = this->bus->copy_large_sprite(fetX, fetY, fetI);
+        result = this->bus->copy_sprite(fetX, fetY, fetI, 16);
     } else {
         result = this->bus->copy_sprite(fetX, fetY, fetI, len);
     }
