@@ -21,6 +21,7 @@ private:
 
     void init_pixel_array();
     void delete_pixel_array();
+    bool draw_byte(int x, int y, unsigned char byte);
     bool draw_point(int x, int y);
     bool draw_single_point(int x, int y);
     bool draw_double_point(int x, int y);
@@ -35,7 +36,7 @@ public:
 
     void set_video_mode(bool mode);
     void update_screen();
-    bool draw_sprite( int x, int y, int size, unsigned char (&memory)[16]);
+    bool draw_sprite( int x, int y, int size, unsigned char (&memory)[32]);
     bool* get_framebuffer();
     int get_framebuffer_height();
     int get_framebuffer_width();

@@ -43,10 +43,12 @@ void tehBUS::set_video_mode(bool mode) {
 
 bool tehBUS::copy_sprite(int x, int y, short int addr, int len) {
     bool flipped = false;
-
     // Copy memory containing sprite into bool array
-    unsigned char sprite[16] = {0};
-    for (int i = 0; i < len ; i++) {
+    unsigned char sprite[32] = {0};
+    // if length is 16, we're always copying 32 bytes of memory. This is a
+    // special case for SUPERCHIP's 16x16 sprite drawing
+    int length = (len == 16) ? 32 : len;
+    for (int i = 0; i < length ; i++) {
         sprite[i] = this->memory->read_ram(addr+i);
     }
 

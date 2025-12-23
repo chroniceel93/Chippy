@@ -49,11 +49,31 @@ void tehVIDEO::blank_screen() {
     return;
 }
 
+bool tehVIDEO::draw_byte(int x, int y, unsigned char byte) {
+    bool flipped = false;
+    int shift = 7;
+    // read in the byte
+    // Then iterate over the line, until there are no more high bits
+        // If the highest bit is high, then it is part of the sprite
+    shift = 7;
+    while (shift >= 0) {
+        if (byte & 0x1) { 
+            if (this->draw_point(x + shift, y)) {
+                flipped = true;
+            }
+        }
+
+        shift--;
+        byte = byte >> 1;
+    }
+    return flipped;
+}
+
 // Why x + 6 - shift, when shift gets up to 7?
 // x = 0. +6 = 6. 6-0 = 6. 6-1=5. 6-2=4. 6-3=3. 6-4=2. 6-5=1. 6-6=0.
 // ... *OH WAIT*. len is variable. Duh.
 // I was accidentally hardcoding the correct solution for a single case.
-bool tehVIDEO::draw_sprite(int x, int y, int size, unsigned char (&memory)[16]) {
+bool tehVIDEO::draw_sprite(int x, int y, int size, unsigned char (&memory)[32]) {
     bool flipped = false;
     
     // If pixel doubling is in effect, set scaling factor.
@@ -68,22 +88,23 @@ bool tehVIDEO::draw_sprite(int x, int y, int size, unsigned char (&memory)[16]) 
     
     unsigned char byte = ' ';
     int shift = 0;
-    // for each byte
-        // read in the byte
-        // Then iterate over the line, until there are no more high bits
-            // If the highest bit is high, then it is part of the sprite
-    for (int i = 0 ; i < size ; i++) {
-        shift = 7;
-        byte = memory[i];
-        while (byte > 0) {
-            if (byte & 0x1) { 
-                if (this->draw_point(xpos + shift, ypos + i)) {
-                    flipped = true;
-                }
+
+    // if size is 16 AND we are in hi-res mode
+    if (size == 16 && !this->pixel_doubling) {
+        for (int i = 0; i < size * 2; i += 2) {
+            if (this->draw_byte(xpos, ypos + (i / 2), memory[i])) {
+                flipped = true;
             }
-            // Shift once, and loop.
-            shift--;
-            byte = byte >> 1;
+
+            if (this->draw_byte(xpos + 8, ypos + (i / 2), memory[i + 1])) {
+                flipped = true;
+            }
+        }
+    } else {
+        for (int i = 0; i < size; i++) {
+            if (this->draw_byte(xpos, ypos + i, memory[i])) {
+                flipped = true;
+            }
         }
     }
 
