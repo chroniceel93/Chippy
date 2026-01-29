@@ -84,6 +84,8 @@ private:
     // Generates string containing opcode for an unknown instructin
     std::string build_unknown_instruction_error(unsigned short int inst);
 
+    bool is_HP48_family_quirk(systype t);
+
     void decode_and_execute(unsigned short int inst);
 
     // 0x0 Block
