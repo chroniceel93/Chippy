@@ -83,6 +83,10 @@ std::string tehCPUS::build_unknown_instruction_error(unsigned short int inst) {
     return result;
 }
 
+bool tehCPUS::is_HP48_family_quirk(systype t) {
+    return (t == chippy::CHIP48) && (t == chippy::SUPERCHIP10);
+}
+
 // NO HALTING MECHANISM PRESENT
 bool tehCPUS::halt() {
     return false;
@@ -388,7 +392,7 @@ void tehCPUS::CLS() {
 }
 
 
-/**
+/**build
  * @brief Return from subroutine.
  * 
  * RET - (0x00EE).
@@ -801,7 +805,7 @@ void tehCPUS::LDI(unsigned short int inst) {
 void tehCPUS::JPR(unsigned short int inst) {
     if (this->target == chippy::CHIP8) {
     this->PC = this->regFile[0x0] + this->bitsNNN(inst) - 2;
-    } else if (this->target == chippy::CHIP48) {
+    } else if (this->is_HP48_family_quirk(this->target)) {
         this->PC = this->regFile[(int) this->bitN(inst, 2)] + this->bitsNN(inst) - 2;
     }
     return;
@@ -1034,7 +1038,7 @@ void tehCPUS::SAVEN(unsigned short int inst) {
         this->Ireg++;
     }
     // Bug in CHIP48, SUPERCHIP10, SUPERCHIP 11, ireg off by one
-    if (this->target == chippy::CHIP48) {
+    if (this->is_HP48_family_quirk(this->target)) {
         this->Ireg--;
     }
     return;
@@ -1058,7 +1062,7 @@ void tehCPUS::LOADN(unsigned short int inst) {
         this->Ireg++;
     }
         // Bug in CHIP48, SUPERCHIP10, SUPERCHIP 11, ireg off by one
-    if (this->target == chippy::CHIP48) {
+    if (this->is_HP48_family_quirk(this->target)) {
         this->Ireg--;
     }
     return;
