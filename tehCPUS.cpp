@@ -179,44 +179,44 @@ void tehCPUS::decode_and_execute(unsigned short int inst) {
         this->decode_hex_0(inst);
         break;
     case 0x1: // JP to 0xNNN
-        this->JP(inst);
+        this->I_1NNN_JMP(inst);
         break;
     case 0x2: // CALL 0xNNN
-        this->CALL(inst);
+        this->I_2NNN_CALL(inst);
         break;
     case 0x3: // SE 
-        this->SE(inst);
+        this->I_3XNN_SKIP_IF_EQUAL(inst);
         break;
     case 0x4: // SNE
-        this->SNE(inst);
+        this->I_4XNN_SKIP_IF_NOT_EQUAL(inst);
         break;
     case 0x5: // SRE
-        this->SRE(inst);
+        this->I_5XY0_SKIP_IF_X_EQ_Y(inst);
         break;
     case 0x6: // LD
-        this->LD(inst);
+        this->I_6XNN_LOAD_NN_TO_X(inst);
         break;
     case 0x7: // ADD
-        this->ADD(inst);
+        this->I_7XNN_ADD_NN_TO_X(inst);
         break;
     case 0x8: // Register Ops -
         // (CPR, OR, AND, XOR, ADDR, SUBR, SHR, SUBN, SHL)
         this->decode_hex_8(inst);
         break;
     case 0x9: // SNER
-        this->SNER(inst);
+        this->I_9XY0_SKIP_IF_X_NE_Y(inst);
         break;
     case 0xA: // LDI
-        this->LDI(inst);
+        this->I_ANNN_LOAD_IREG(inst);
         break;
     case 0xB: // JPR
-        this->JPR(inst);
+        this->I_BNNN_JUMP_TO_OFFSET(inst);
         break;
     case 0xC: // RND
-        this->RND(inst);
+        this->I_CXNN_RANDOM(inst);
         break;
     case 0xD: // DRAW
-        this->DRAW(inst);
+        this->I_DXYN_DRAW(inst);
         break;
     case 0xE: // Key detection OPs - SKP, SKNP
         this->decode_hex_E(inst);
@@ -248,16 +248,16 @@ void tehCPUS::decode_and_execute(unsigned short int inst) {
 void tehCPUS::decode_hex_0(unsigned short int inst) {
     switch (inst) {
     case 0x00E0: // CLS
-        this->CLS();
+        this->I_00E0_CLS();
         break;
     case 0x00EE: // RET
-        this->RET();
+        this->I_00EE_RET();
         break;
     case 0x00FE: // DHI
-        this->DHI();
+        this->I_00FE_DISABLE_HIRES();
         break;
     case 0x00FF: // HIR
-        this->HIR();
+        this->I_00FF_ENABLE_HIRES();
         break;
     default:
         // STUB - Calls subroutine in RCA 1802 microprocessor. Not emulated.
@@ -276,31 +276,31 @@ void tehCPUS::decode_hex_8(unsigned short int inst) {
     unsigned char tmp;
     switch (inst & 0xF) {
     case 0x0: // CPR
-        this->CPR(inst);
+        this->I_8XY0_COPY_X_TO_Y(inst);
         break;
     case 0x1: // OR
-        this->OR(inst);
+        this->I_8XY1_OR_X_WITH_Y(inst);
         break;
     case 0x2: // AND
-        this->AND(inst);
+        this->I_8XY2_AND_X_WITH_Y(inst);
         break;
     case 0x3: // XOR
-        this->XOR(inst);
+        this->I_8XY3_XOR_X_WITH_Y(inst);
         break;
     case 0x4: // ADDR
-        this->ADDR(inst);
+        this->I_8XY4_ADD_X_AND_Y(inst);
         break;
     case 0x5: // SUBR
-        this->SUBR(inst);
+        this->I_8XY5_SUB_Y_FROM_X(inst);
         break;
     case 0x6: // SHR
-        this->SHR(inst);
+        this->I_8XZ6_SHIFT_X_RIGHT(inst);
         break;
     case 0x7: // SUBRN
-        this->SUBRN(inst);
+        this->I_8XY7_SUB_X_FROM_Y(inst);
         break;
     case 0xE: // SHL
-        this->SHL(inst);
+        this->I_8XZE_SHIFT_X_LEFT(inst);
         break;
     default:
         // Malformed instruction - Throw error
@@ -324,10 +324,10 @@ void tehCPUS::decode_hex_E(unsigned short int inst) {
     unsigned char tmp;
     switch(this->bitsNN(inst)) {
     case 0x9E: // SKP
-        this->SKP(inst);
+        this->I_EX9E_SKIP_IF_KEY(inst);
         break;
     case 0xA1: // SKNP
-        this->SKNP(inst);
+        this->I_EXA1_SKIP_IF_NO_KEY(inst);
         break;
     default: // NOOP
         // throw std::out_of_range(build_unknown_instruction_error(inst).c_str());
@@ -348,31 +348,31 @@ void tehCPUS::decode_hex_E(unsigned short int inst) {
 void tehCPUS::decode_hex_F(unsigned short int inst) {
     switch(this->bitsNN(inst)) {
     case 0x07: // RDDT
-        this->RDDT(inst);
+        this->I_FX07_READ_DISPLAY_TIMER(inst);
         break;
     case 0x0A: // LDK
-        this->LDK(inst);
+        this->I_FX0A_READ_KEY(inst);
         break;
     case 0x15: // LDDT
-        this->LDDT(inst);
+        this->I_FX15_SET_DISPLAY_TIMER(inst);
         break;
     case 0x18: // LDST
-        this->LDST(inst);
+        this->I_FX18_SET_SOUND_TIMER(inst);
         break;
     case 0x1E: // ADDI
-        this->ADDI(inst);
+        this->I_FX1E_ADD_VX_TO_I(inst);
         break;
     case 0x29: // LDSV
-        this->LDSV(inst);
+        this->I_FX29_LOAD_HEX_SPRITE(inst);
         break;
     case 0x33: // SAVEB
-        this->SAVEB(inst);
+        this->I_FX33_SAVE_BCD_VALUE(inst);
         break;
     case 0x55: // SAVEN
-        this->SAVEN(inst);
+        this->I_FX55_SAVE_REGISTERS(inst);
         break;
     case 0x65: // LOADN
-        this->LOADN(inst);
+        this->I_FX65_LOAD_REGISTERS(inst);
         break;
     default: // NOOP
         // throw std::out_of_range(build_unknown_instruction_error(inst).c_str());
@@ -386,11 +386,10 @@ void tehCPUS::decode_hex_F(unsigned short int inst) {
  * 
  * CLS - (0x00E0).
  */
-void tehCPUS::CLS() {
+void tehCPUS::I_00E0_CLS() {
     this->bus->blank_screen();
     return;
 }
-
 
 /**build
  * @brief Return from subroutine.
@@ -403,7 +402,7 @@ void tehCPUS::CLS() {
  * 
  * @param inst 
  */
-void tehCPUS::RET() {
+void tehCPUS::I_00EE_RET() {
     // if SPreg == 0, then do nothing.
     if (this->SPreg == 0) {
         // std::__throw_domain_error("SPreg OOB");
@@ -417,7 +416,10 @@ void tehCPUS::RET() {
     return;
 }
 
-void tehCPUS::DHI() {
+/**
+ * @brief Disables hi-res drawing mode in SUPERCHIP targets.
+ */
+void tehCPUS::I_00FE_DISABLE_HIRES() {
     if (this->target == chippy::SUPERCHIP10) {
         this->bus->set_video_mode(true);
         // this->bus->set_resolution(64, 32);
@@ -425,7 +427,10 @@ void tehCPUS::DHI() {
     return;
 }
 
-void tehCPUS::HIR() {
+/**
+ * @brief Enables hi-res drawing mode in SUPERCHIP targets.
+ */
+void tehCPUS::I_00FF_ENABLE_HIRES() {
     if (this->target == chippy::SUPERCHIP10) {
         this->bus->set_video_mode(false);
         // this->bus->set_resolution(128, 64);
@@ -440,7 +445,7 @@ void tehCPUS::HIR() {
  * 
  * @param inst 
  */
-void tehCPUS::JP(unsigned short int inst) {
+void tehCPUS::I_1NNN_JMP(unsigned short int inst) {
     // We implement PC *after* running the instruction, so we decrement by two
     // to stop an off-by-one. We could probably return a bool to control whether
     // we should clock or not? Eh, this works.
@@ -461,7 +466,7 @@ void tehCPUS::JP(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::CALL(unsigned short int inst) {
+void tehCPUS::I_2NNN_CALL(unsigned short int inst) {
     // Save current PC to stack
     this->stackFile[this->SPreg] = this->PC;
     // If SPreg > 15 send error
@@ -472,14 +477,14 @@ void tehCPUS::CALL(unsigned short int inst) {
         this->SPreg++;
     }
     // Jump 
-    this->JP(inst);
+    this->I_1NNN_JMP(inst);
     return;
 }
 
 /**
  * @brief Skip the next instruction if Vx == 0x00NN.
  * 
- * SE VX, 0xNN - (0x3NN).
+ * SKIP_IF_EQUAL Vx, 0xNN - (0x3xNN).
  * 
  * Skip the next instruction if the value held in the register X,
  *   (this->regFile[Vx]), where x is given by the third bit from our instruction
@@ -488,7 +493,7 @@ void tehCPUS::CALL(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::SE(unsigned short int inst) {
+void tehCPUS::I_3XNN_SKIP_IF_EQUAL(unsigned short int inst) {
     if (this->regFile[this->bitN(inst, 2)] == this->bitsNN(inst)) {
         this->PC = this->PC + 2;
     } // else do_nothing();
@@ -506,7 +511,7 @@ void tehCPUS::SE(unsigned short int inst) {
  * @param inst 
  */
 
-void tehCPUS::SNE(unsigned short int inst) {
+void tehCPUS::I_4XNN_SKIP_IF_NOT_EQUAL(unsigned short int inst) {
     if (this->regFile[this->bitN(inst, 2)] != this->bitsNN(inst)) {
         this->PC = this->PC + 2;
     }
@@ -524,7 +529,7 @@ void tehCPUS::SNE(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::SRE(unsigned short int inst) {
+void tehCPUS::I_5XY0_SKIP_IF_X_EQ_Y(unsigned short int inst) {
     if (this->regFile[this->bitN(inst, 2)] 
                             == this->regFile[this->bitN(inst, 1)]) {
         this->PC = this->PC + 2;
@@ -542,7 +547,7 @@ void tehCPUS::SRE(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::LD(unsigned short int inst) {
+void tehCPUS::I_6XNN_LOAD_NN_TO_X(unsigned short int inst) {
     this->regFile[this->bitN(inst, 2)] = this->bitsNN(inst);
     return;
 }
@@ -557,7 +562,7 @@ void tehCPUS::LD(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::ADD(unsigned short int inst) {
+void tehCPUS::I_7XNN_ADD_NN_TO_X(unsigned short int inst) {
     unsigned char regx = this->bitN(inst, 2);
     this->regFile[regx] = this->regFile[regx] + this->bitsNN(inst);
     return;
@@ -575,7 +580,7 @@ void tehCPUS::ADD(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::CPR(unsigned short int inst) {
+void tehCPUS::I_8XY0_COPY_X_TO_Y(unsigned short int inst) {
     this->regFile[this->bitN(inst, 2)] = this->regFile[this->bitN(inst, 1)];
     return;
 }
@@ -589,7 +594,7 @@ void tehCPUS::CPR(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::OR(unsigned short int inst) {
+void tehCPUS::I_8XY1_OR_X_WITH_Y(unsigned short int inst) {
     this->regFile[this->bitN(inst, 2)] |= this->regFile[this->bitN(inst, 1)];
 // Chip-8 quirk- OR, AND, XOR instructions reset Vf to 0.
     this->regFile[0xF] = 0;
@@ -605,7 +610,7 @@ void tehCPUS::OR(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::AND(unsigned short int inst) {
+void tehCPUS::I_8XY2_AND_X_WITH_Y(unsigned short int inst) {
     this->regFile[this->bitN(inst, 2)] &= this->regFile[this->bitN(inst, 1)];
 // Chip-8 quirk- OR, AND, XOR instructions reset Vf to 0.    
     this->regFile[0xF] = 0;
@@ -622,7 +627,7 @@ void tehCPUS::AND(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::XOR(unsigned short int inst) {
+void tehCPUS::I_8XY3_XOR_X_WITH_Y(unsigned short int inst) {
     this->regFile[this->bitN(inst, 2)] ^= this->regFile[this->bitN(inst, 1)];
 // Chip-8 quirk- OR, AND, XOR instructions reset Vf to 0.
     this->regFile[0xF] = 0;
@@ -642,7 +647,7 @@ void tehCPUS::XOR(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::ADDR(unsigned short int inst) {
+void tehCPUS::I_8XY4_ADD_X_AND_Y(unsigned short int inst) {
     unsigned char regx = this->bitN(inst, 2);
     unsigned short int temp = ((unsigned short int) this->regFile[regx]) 
                    + ((unsigned short int) this->regFile[this->bitN(inst, 1)]);
@@ -671,7 +676,7 @@ void tehCPUS::ADDR(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::SUBR(unsigned short int inst) {
+void tehCPUS::I_8XY5_SUB_Y_FROM_X(unsigned short int inst) {
     unsigned char regx = this->bitN(inst, 2);
     unsigned char regy = this->bitN(inst, 1);
 // We must calculate the borrow *before* the subtraction, and apply it *after*
@@ -688,14 +693,16 @@ void tehCPUS::SUBR(unsigned short int inst) {
 /**
  * @brief Shift the value in Vx right by one - Store LSB in Vf.
  * 
- * SHR Vx - (0x8x*6).
+ * SHR Vx - (0x8xZ6).
  * 
  * Shifts the value in Register X to the right by one bit. The least significant
  *   bit is saved to Register F.
  * 
+ * Here, we are treating Z as a 'don't care'.
+ * 
  * @param inst 
  */
-void tehCPUS::SHR(unsigned short int inst) {
+void tehCPUS::I_8XZ6_SHIFT_X_RIGHT(unsigned short int inst) {
     unsigned char regx = this->bitN(inst, 2);
     unsigned char regy = this->bitN(inst, 1);
     // CHIP-8 Quirk: Y is not copied in later interpreters.
@@ -721,7 +728,7 @@ void tehCPUS::SHR(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::SUBRN(unsigned short int inst) {
+void tehCPUS::I_8XY7_SUB_X_FROM_Y(unsigned short int inst) {
     unsigned char regx = this->bitN(inst, 2);
     unsigned char regy = this->bitN(inst, 1);
     unsigned char borrow = 1;
@@ -736,16 +743,18 @@ void tehCPUS::SUBRN(unsigned short int inst) {
 
 
 /**
- * @brief Shift the value in Vx by one - Store MSB in Vf.
+ * @brief Shift the value in Vx left by one - Store MSB in Vf.
  * 
- * SHL Vx - (0x8x*E).
+ * SHL Vx - (0x8xZE).
  * 
  * Shifts the value in Register X to the left by one bit. The most significant
  *   bit is saved to Register F.
  * 
+ * Here, we are treating Z as a 'Don't care'.
+ * 
  * @param inst 
  */
-void tehCPUS::SHL(unsigned short int inst) {
+void tehCPUS::I_8XZE_SHIFT_X_LEFT(unsigned short int inst) {
     unsigned char regx = this->bitN(inst, 2);
     unsigned char regy = this->bitN(inst, 1);
     // CHIP-8 Quirk: Y is not copied in later interpreters.
@@ -771,7 +780,7 @@ void tehCPUS::SHL(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::SNER(unsigned short int inst) {
+void tehCPUS::I_9XY0_SKIP_IF_X_NE_Y(unsigned short int inst) {
     if (this->regFile[this->bitN(inst, 2)] 
                                         != this->regFile[this->bitN(inst, 1)]) {
         this->PC = this->PC + 2;
@@ -786,7 +795,7 @@ void tehCPUS::SNER(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::LDI(unsigned short int inst) {
+void tehCPUS::I_ANNN_LOAD_IREG(unsigned short int inst) {
     this->Ireg = this->bitsNNN(inst);
     return;
 }
@@ -802,7 +811,7 @@ void tehCPUS::LDI(unsigned short int inst) {
  * (this->PC = this->regFile[0] + 0xNNN - 2)
  * @param inst 
  */
-void tehCPUS::JPR(unsigned short int inst) {
+void tehCPUS::I_BNNN_JUMP_TO_OFFSET(unsigned short int inst) {
     if (this->target == chippy::CHIP8) {
     this->PC = this->regFile[0x0] + this->bitsNNN(inst) - 2;
     } else if (this->is_HP48_family_quirk(this->target)) {
@@ -824,7 +833,7 @@ void tehCPUS::JPR(unsigned short int inst) {
  * (this->regFile[x] = RAND() & 0xNN).
  * @param inst 
  */
-void tehCPUS::RND(unsigned short int inst) {
+void tehCPUS::I_CXNN_RANDOM(unsigned short int inst) {
     this->regFile[this->bitN(inst, 2)] = this->dist(this->generator) 
                                 & this->bitsNN(inst);
     return;
@@ -851,7 +860,7 @@ void tehCPUS::RND(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::DRAW(unsigned short int inst) {
+void tehCPUS::I_DXYN_DRAW(unsigned short int inst) {
     int len = bitN(inst, 0);
     int fetX = this->regFile[this->bitN(inst, 2)];
     int fetY = this->regFile[this->bitN(inst, 1)];
@@ -881,7 +890,7 @@ void tehCPUS::DRAW(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::SKP(unsigned short int inst) {
+void tehCPUS::I_EX9E_SKIP_IF_KEY(unsigned short int inst) {
     if (this->bus->test_key(this->regFile[this->bitN(inst, 2)])) {
         this->PC = this->PC + 2;
     } // else, do_nothing();
@@ -895,7 +904,7 @@ void tehCPUS::SKP(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::SKNP(unsigned short int inst) {
+void tehCPUS::I_EXA1_SKIP_IF_NO_KEY(unsigned short int inst) {
     if (!this->bus->test_key(this->regFile[this->bitN(inst, 2)])) {
         this->PC = this-> PC + 2;
     } // else, do_nothing();
@@ -903,19 +912,19 @@ void tehCPUS::SKNP(unsigned short int inst) {
 }
 
 /**
- * @brief Save the Delay Timer's current value into VN.
+ * @brief Save the Delay Timer's current value into Vx.
  * 
  * RDDT Vx - (0xFx07).
  * 
  * @param inst 
  */
-void tehCPUS::RDDT(unsigned short int inst) {
+void tehCPUS::I_FX07_READ_DISPLAY_TIMER(unsigned short int inst) {
     this->regFile[this->bitN(inst, 2)] = this->DTreg;
     return;
 }
 
 /**
- * @brief Save the current key's scancode into the register VN.
+ * @brief Save the current key's scancode into the register Vx.
  * 
  * LDK Vx - (0xFx0A).
  * 
@@ -925,7 +934,7 @@ void tehCPUS::RDDT(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::LDK(unsigned short int inst) {
+void tehCPUS::I_FX0A_READ_KEY(unsigned short int inst) {
     unsigned char temp = this->bitN(inst, 2);
     // We're doing this a little bit out of order! This is fine.
     // If we read in the keys and *then* test while looping over this instr-
@@ -946,59 +955,59 @@ void tehCPUS::LDK(unsigned short int inst) {
 }
 
 /**
- * @brief Load the value in VN to the Delay Timer Register.
+ * @brief Load the value in Vx to the Delay Timer Register.
  * 
  * LDDT Vx - (0xFx15).
  * 
  * @param inst 
  */
-void tehCPUS::LDDT(unsigned short int inst) {
+void tehCPUS::I_FX15_SET_DISPLAY_TIMER(unsigned short int inst) {
     this->DTreg = this->regFile[this->bitN(inst, 2)];
     return;
 }
 
 /**
- * @brief Load the value in VN to the Sound Timer Register.
+ * @brief Load the value in Vx to the Sound Timer Register.
  * 
- * LDST VN - (0XFN18).
+ * LDST Vx - (0XFx18).
  * 
  * @param inst 
  */
-void tehCPUS::LDST(unsigned short int inst) {
+void tehCPUS::I_FX18_SET_SOUND_TIMER(unsigned short int inst) {
     this->STreg = this->regFile[this->bitN(inst, 2)];
     return;
 }
 
 /**
- * @brief Add the value in VN to I.
+ * @brief Add the value in Vx to I.
  * 
- * ADDI VN - (0xFN1E).
+ * ADDI Vx - (0xFx1E).
  * 
  * @param inst 
  */
-void tehCPUS::ADDI(unsigned short int inst) {
+void tehCPUS::I_FX1E_ADD_VX_TO_I(unsigned short int inst) {
     this->Ireg = this->Ireg + this->regFile[this->bitN(inst, 2)];
     return;
 }
 
 /**
- * @brief Load the memory location for the hex sprite of value in VN.
+ * @brief Load the memory location for the hex sprite of value in Vx.
  * 
- * LDSV VN - (0xFN29).
+ * LDSV Vx - (0xFx29).
  * 
  * @param inst 
  */
-void tehCPUS::LDSV(unsigned short int inst) {
+void tehCPUS::I_FX29_LOAD_HEX_SPRITE(unsigned short int inst) {
     this->Ireg = this->regFile[this->bitN(inst, 2)] * 5;
     return;
 }
 
 /**
- * @brief Save BCD representation of VN into memory at I(+0-3).
+ * @brief Save BCD representation of Vx into memory at I(+0-3).
  * 
- * SAVEB N - (0xFN33).
+ * SAVEB x - (0xFx33).
  * 
- * Convert the value stored in register VN (this->regFile[N]) into a binary-
+ * Convert the value stored in register Vx (this->regFile[x]) into a binary-
  *   coded-decimal, and store it in RAM at address I- Where the most significant
  *   digit is written first, and the subsequent digits are written to I+1, and
  *   I + 2.
@@ -1012,7 +1021,7 @@ void tehCPUS::LDSV(unsigned short int inst) {
  * 
  * @param inst 
  */
-void tehCPUS::SAVEB(unsigned short int inst) {
+void tehCPUS::I_FX33_SAVE_BCD_VALUE(unsigned short int inst) {
     int tempX = this->regFile[this->bitN(inst, 2)];
     this->bus->write_ram(this->Ireg, ((tempX / 100) % 10));
     this->bus->write_ram(this->Ireg+1, ((tempX / 10) % 10));
@@ -1021,17 +1030,17 @@ void tehCPUS::SAVEB(unsigned short int inst) {
 }
 
 /**
- * @brief Save registers V0 through VN to memory starting at I.
+ * @brief Save registers V0 through Vx to memory starting at I.
  * 
- * SAVEN N - (0xFN55).
+ * SAVEN x - (0xFx55).
  * 
  * Save the values of the CPU's main registers (this->regFile[]) in RAM at the
  *   location stored in the Ireg (this->ireg). We will only save the number of
- *   registers equal to N.
+ *   registers equal to x.
  * 
  * @param inst 
  */
-void tehCPUS::SAVEN(unsigned short int inst) {
+void tehCPUS::I_FX55_SAVE_REGISTERS(unsigned short int inst) {
     int tempX = this->bitN(inst, 2);
     for (unsigned char i = 0; i <= tempX; i++) {
         this->bus->write_ram(this->Ireg, this->regFile[i]);
@@ -1047,15 +1056,15 @@ void tehCPUS::SAVEN(unsigned short int inst) {
 /**
  * @brief Load registers V0 through Vx from memory starting at I.
  * 
- * LOADN N - (0xFN65).
+ * LOADN x - (0xFx65).
  * 
  * Load the values stored in RAM at the location stored in the Ireg (this->Ireg)
  *   into the CPU's main registers (this->regFile[]). We will only load the num-
- *   ber of registers equal to N.
+ *   ber of registers equal to x.
  * 
  * @param inst 
  */
-void tehCPUS::LOADN(unsigned short int inst) {
+void tehCPUS::I_FX65_LOAD_REGISTERS(unsigned short int inst) {
     int tempX = this->bitN(inst, 2);
     for (unsigned char i = 0; i <= tempX; i++) {
         this->regFile[i] = this->bus->read_ram(this->Ireg);

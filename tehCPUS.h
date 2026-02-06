@@ -90,60 +90,60 @@ private:
 
     // 0x0 Block
     void decode_hex_0(unsigned short int inst);
-    void CLS  (); // 0x00E0
-    void RET  (); // 0x00EE
-    void DHI  (); // 0x00FE
-    void HIR  (); // 0x00FF
+    void I_00E0_CLS  (); // 0x00E0
+    void I_00EE_RET  (); // 0x00EE
+    void I_00FE_DISABLE_HIRES  (); // 0x00FE
+    void I_00FF_ENABLE_HIRES  (); // 0x00FF
     // 0x1 Block
-    void JP   (unsigned short int inst);
+    void I_1NNN_JMP   (unsigned short int inst);
     // 0x2 Block
-    void CALL (unsigned short int inst);
+    void I_2NNN_CALL (unsigned short int inst);
     // 0x3 Block
-    void SE   (unsigned short int inst);
+    void I_3XNN_SKIP_IF_EQUAL   (unsigned short int inst);
     // 0x4 Block
-    void SNE  (unsigned short int inst);
+    void I_4XNN_SKIP_IF_NOT_EQUAL  (unsigned short int inst);
     // 0x5 Block
-    void SRE  (unsigned short int inst);
+    void I_5XY0_SKIP_IF_X_EQ_Y  (unsigned short int inst);
     // 0x6 Block
-    void LD   (unsigned short int inst);
+    void I_6XNN_LOAD_NN_TO_X   (unsigned short int inst);
     // 0x7 Block
-    void ADD  (unsigned short int inst);
+    void I_7XNN_ADD_NN_TO_X  (unsigned short int inst);
     // 0x8 Block
     void decode_hex_8(unsigned short int inst);
-    void CPR  (unsigned short int inst);
-    void OR   (unsigned short int inst);
-    void AND  (unsigned short int inst);
-    void XOR  (unsigned short int inst);
-    void ADDR (unsigned short int inst);
-    void SUBR (unsigned short int inst);
-    void SHR  (unsigned short int inst);
-    void SUBRN(unsigned short int inst);
-    void SHL  (unsigned short int inst);
+    void I_8XY0_COPY_X_TO_Y  (unsigned short int inst);
+    void I_8XY1_OR_X_WITH_Y   (unsigned short int inst);
+    void I_8XY2_AND_X_WITH_Y  (unsigned short int inst);
+    void I_8XY3_XOR_X_WITH_Y  (unsigned short int inst);
+    void I_8XY4_ADD_X_AND_Y (unsigned short int inst);
+    void I_8XY5_SUB_Y_FROM_X (unsigned short int inst);
+    void I_8XZ6_SHIFT_X_RIGHT  (unsigned short int inst);
+    void I_8XY7_SUB_X_FROM_Y(unsigned short int inst);
+    void I_8XZE_SHIFT_X_LEFT  (unsigned short int inst);
     // 0x9 Block
-    void SNER (unsigned short int inst);
+    void I_9XY0_SKIP_IF_X_NE_Y (unsigned short int inst);
     // 0xA Block
-    void LDI  (unsigned short int inst);
+    void I_ANNN_LOAD_IREG  (unsigned short int inst);
     // 0xB Block
-    void JPR  (unsigned short int inst);
+    void I_BNNN_JUMP_TO_OFFSET  (unsigned short int inst);
     // 0xC Block
-    void RND  (unsigned short int inst);
+    void I_CXNN_RANDOM  (unsigned short int inst);
     // 0xD Block
-    void DRAW (unsigned short int inst);
+    void I_DXYN_DRAW (unsigned short int inst);
     // 0xE Block
     void decode_hex_E(unsigned short int inst);
-    void SKP  (unsigned short int inst);
-    void SKNP (unsigned short int isnt);
+    void I_EX9E_SKIP_IF_KEY  (unsigned short int inst);
+    void I_EXA1_SKIP_IF_NO_KEY (unsigned short int isnt);
     // 0xF Block
     void decode_hex_F(unsigned short int inst);
-    void RDDT (unsigned short int inst);
-    void LDK  (unsigned short int inst);
-    void LDDT (unsigned short int inst);
-    void LDST (unsigned short int inst);
-    void ADDI (unsigned short int inst);
-    void LDSV (unsigned short int inst);
-    void SAVEB(unsigned short int inst);
-    void SAVEN(unsigned short int inst);
-    void LOADN(unsigned short int inst);
+    void I_FX07_READ_DISPLAY_TIMER (unsigned short int inst);
+    void I_FX0A_READ_KEY  (unsigned short int inst);
+    void I_FX15_SET_DISPLAY_TIMER (unsigned short int inst);
+    void I_FX18_SET_SOUND_TIMER (unsigned short int inst);
+    void I_FX1E_ADD_VX_TO_I (unsigned short int inst);
+    void I_FX29_LOAD_HEX_SPRITE (unsigned short int inst);
+    void I_FX33_SAVE_BCD_VALUE(unsigned short int inst);
+    void I_FX55_SAVE_REGISTERS(unsigned short int inst);
+    void I_FX65_LOAD_REGISTERS(unsigned short int inst);
 
 public:
     tehCPUS(tehBUS& bus, systype opMode);
