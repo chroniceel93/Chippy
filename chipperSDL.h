@@ -12,21 +12,32 @@
 #include "tehSCREEN.h"
 #include "tehBOOP.h"
 #include "tehBEEP.h"
-#include "SDL.h"
-#include "SDL_audio.h"
+#include "SDL2/SDL.h"
+#include "SDL2/SDL_audio.h"
+
+const int WINDOW_HEIGHT = 256;
+const int WINDOW_WIDTH = 512;
 
 class chipperSDL: public tehSCREEN, public tehBOOP, public tehBEEP {
 private:
     // Variables used for tehSCREEN
     bool SDL_Status; // Hold copy of SDL Status code.
     uint32_t *pixel_array; // Array of pixels used to build display texture.
-    SDL_Window *window; // Pointer to our window.
     SDL_Texture *render_texture; // Pointer to the render texture.
     SDL_Texture *fade_texture;
     SDL_Renderer *renderer; // Pointer to the renderer.
     SDL_Color background, foreground; // TODO: use these to replace hardcoded values
     SDL_Rect texrect;
     int vbuf_h, vbuf_w;
+    // Variables used to handle widnow state
+    SDL_Window *window; // Pointer to our window.
+    bool is_mouse_focus;
+    bool is_keyboard_focus;
+    bool is_fullscreen;
+    bool is_minimized;
+    // Window dimensions
+    int window_height;
+    int window_width;
 
     // Variables used for tehBOOP
     SDL_Event input; // input queue

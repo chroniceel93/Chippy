@@ -51,15 +51,20 @@ bool chipperSDL::init_SDL_window() {
         "Chip-8"
         , SDL_WINDOWPOS_CENTERED
         , SDL_WINDOWPOS_CENTERED
-        , 512
-        , 256
-        , SDL_WINDOW_SHOWN
+        , WINDOW_WIDTH
+        , WINDOW_HEIGHT
+        , SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE
     );
     // if the SDL_CreateWindow fails, then the pointer *window will be null. 
     // So, if the window == nullptr, then throw an error
     if (this->window == NULL) {
         throw SDL_GetError();
         result = false;
+    } else {
+        this->is_mouse_focus = true;
+        this->is_keyboard_focus = true;
+        this->window_width = WINDOW_WIDTH;
+        this->window_height = WINDOW_HEIGHT;
     }
     return result;
 }
@@ -269,8 +274,8 @@ void chipperSDL::refresh_screen() {
     SDL_Rect dstrect;
     dstrect.x = 0;
     dstrect.y = 0;
-    dstrect.w = 512;
-    dstrect.h = 256;
+    dstrect.w = this->window_width;
+    dstrect.h = this->window_height;
     // Copy render_texture to fade_texture 
     SDL_SetRenderTarget(this->renderer, this->fade_texture);
     SDL_RenderCopy(this->renderer, this->render_texture, &this->texrect, &this->texrect);
@@ -304,9 +309,63 @@ int chipperSDL::get_height() {
 void chipperSDL::process_events() {
     SDL_Event input;
     while (SDL_PollEvent(&input)) {
-        if (input.type == SDL_QUIT) {
+        switch (input.type) {
+        case SDL_QUIT:
             this->exit = true;
-        } // else do_nothing();
+            break;
+        case SDL_WINDOWEVENT:
+            
+            switch (input.window.event) {
+            case SDL_WINDOWEVENT_SIZE_CHANGED:
+                // In this case, data1 is the width, and data2 is the height
+                this->window_width = input.window.data1;
+                this->window_height = input.window.data2;
+                break;
+            case SDL_WINDOWEVENT_EXPOSED:
+                // Repaint on exposure.
+                SDL_RenderPresent(this->renderer);
+                break;
+            case SDL_WINDOWEVENT_ENTER:
+                // The mouse has entered the window.
+                this->is_mouse_focus = true;
+                break;
+            case SDL_WINDOWEVENT_LEAVE:
+                // The mouse has left the window.
+                this->is_mouse_focus = false;
+                break;
+            case SDL_WINDOWEVENT_FOCUS_GAINED:
+                // We have gained keyboard focus.
+                this->is_keyboard_focus = true;
+                break;
+            case SDL_WINDOWEVENT_FOCUS_LOST:
+                // We have lost the keyboard's focus.
+                this->is_keyboard_focus = false;
+                break;
+            case SDL_WINDOWEVENT_MINIMIZED:
+                // The window has been minimized.
+                this->is_minimized = true;
+                break;
+            case SDL_WINDOWEVENT_MAXIMIZED:
+                // The window has been maximized.
+                this->is_minimized = false;
+                break;
+            case SDL_WINDOWEVENT_RESTORED:
+                // The window has been restored from a minimized state.
+                this->is_minimized = false;
+                break;
+            default:
+                // do_nothing();
+                break;
+            }
+
+        default: 
+            // do_nothing();
+            break;
+        }
+
+        // if (input.type == SDL_QUIT) {
+        //     this->exit = true;
+        // } // else do_nothing();
     }
     return;
 }
