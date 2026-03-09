@@ -6,17 +6,18 @@
  * @date 2025-05-23
  */
 
-#ifndef CHIPPERSDL_H_
-#define CHIPPERSDL_H_
+#ifndef CHIPPERSDL3_H_
+#define CHIPPERSDL3_H_
 
 #include "tehSCREEN.h"
 #include "tehBOOP.h"
 #include "tehBEEP.h"
 #include "tehCOMMONZ.h"
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_audio.h"
+#include "SDL3/SDL.h"
+#include "SDL3/SDL_main.h"
+#include "SDL3/SDL_audio.h"
 
-class chipperSDL: public tehSCREEN, public tehBOOP, public tehBEEP {
+class chipperSDL3: public tehSCREEN, public tehBOOP, public tehBEEP {
 private:
     // Variables used for tehSCREEN
     bool SDL_Status; // Hold copy of SDL Status code.
@@ -25,7 +26,7 @@ private:
     SDL_Texture *fade_texture;
     SDL_Renderer *renderer; // Pointer to the renderer.
     SDL_Color background, foreground; // TODO: use these to replace hardcoded values
-    SDL_Rect texrect;
+    SDL_FRect texrect;
     int vbuf_h, vbuf_w;
     // Variables used to handle widnow state
     SDL_Window *window; // Pointer to our window.
@@ -39,7 +40,7 @@ private:
 
     // Variables used for tehBOOP
     SDL_Event input; // input queue
-    const Uint8 *state;
+    const bool *state;
     bool exit;
 
     struct mapping {
@@ -86,6 +87,7 @@ private:
 
     // A struct holding all of the various audio configuration variables.
     SDL_AudioSpec audioSettings;
+    SDL_AudioStream *audioStream;
  
     // Keeps track of what audio device we're using.
     int deviceID;
@@ -96,6 +98,7 @@ private:
 
     // Private initialization functions
     bool init_SDL();
+    bool init_SDL_Audio();
     bool init_SDL_window();
     bool init_renderer();
     bool init_textures();
@@ -105,12 +108,13 @@ private:
     void delete_pixel_array();
     
     // Private functions for audio handling.
-    static void SDLAudioCallback(void *UserData, Uint8 *AudioData, int Length);
+    friend void SDLAudioCallback(void *UserData, SDL_AudioStream *stream, int additional_amount, int total_amount);
+    void Audio_Callback_Function(SDL_AudioStream *stream, int additional_amount, int total_amount);
     void GenerateSamples(bool mute);
 
 public:
-    chipperSDL();
-    ~chipperSDL();
+    chipperSDL3();
+    ~chipperSDL3();
 
     // Implemented from tehSCREEN
     // void blank_screen();

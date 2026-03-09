@@ -33,7 +33,7 @@ int WinMain(int argc, char *argv[]) {
 #else
 int main(int argc, char *argv[]) {
 #endif
-    chipperSDL* sdl;
+    chipperSDL3* sdl;
     chippy::tehCHIP* b;
 
     std::string romFileName = "";
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
         std::cout << "Rom file not specified!\n";
     } else {
         try {
-            sdl = new chipperSDL();
+            sdl = new chipperSDL3();
             b = new chippy::tehCHIP(*sdl, *sdl, *sdl, compat);
             b->load_program(romFileName);
             b->execute();
