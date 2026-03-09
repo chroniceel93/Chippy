@@ -6,17 +6,18 @@
  * @date 2025-05-23
  */
 
-#ifndef CHIPPERSDL_H_
-#define CHIPPERSDL_H_
+#ifndef CHIPPERSDL3_H_
+#define CHIPPERSDL3_H_
 
 #include "tehSCREEN.h"
 #include "tehBOOP.h"
 #include "tehBEEP.h"
 #include "tehCOMMONZ.h"
-#include "SDL2/SDL.h"
-#include "SDL2/SDL_audio.h"
+#include "SDL3/SDL.h"
+#include "SDL3/SDL_main.h"
+#include "SDL3/SDL_audio.h"
 
-class chipperSDL: public tehSCREEN, public tehBOOP, public tehBEEP {
+class chipperSDL3: public tehSCREEN, public tehBOOP, public tehBEEP {
 private:
     // Variables used for tehSCREEN
     bool SDL_Status; // Hold copy of SDL Status code.
@@ -25,7 +26,7 @@ private:
     SDL_Texture *fade_texture;
     SDL_Renderer *renderer; // Pointer to the renderer.
     SDL_Color background, foreground; // TODO: use these to replace hardcoded values
-    SDL_Rect texrect;
+    SDL_FRect texrect;
     int vbuf_h, vbuf_w;
     // Variables used to handle widnow state
     SDL_Window *window; // Pointer to our window.
@@ -39,7 +40,7 @@ private:
 
     // Variables used for tehBOOP
     SDL_Event input; // input queue
-    const Uint8 *state;
+    const bool *state;
     bool exit;
 
     struct mapping {
@@ -53,20 +54,51 @@ private:
         SDL_SCANCODE_4, SDL_SCANCODE_R, SDL_SCANCODE_F, SDL_SCANCODE_V
     };
 
-    // A struct holding all of the various audio configuration variables.
-    SDL_AudioSpec audioSettings;
-    SDL_AudioStream *stream;
-    // Keeps track of what audio device we're using.
-    int deviceID;
+    // Variables used for tehBEEP
+        // Credit to David Gow's Handmade Penguin tutorial, Getting Circular with
+    //  SDL Audio by Eric Scrivner, and to LazyFoo's SDL tutorial, with which I 
+    //  kludged together something that barely works!
+    // https://lazyfoo.net/tutorials/SDL/
+    // https://davidgow.net/handmadepenguin/ch8.html
+    // https://ericscrivner.me/2017/10/getting-circular-sdl-audio/
+
+    struct audio_ring_buffer {
+        int Size; // Size of our buffer, in bytes
+        int writeCursor; // Where we will insert data into our buffer
+        int playCursor; // Where we will read data from the buffer
+        void *data;
+    };
+
     // CONSTANT BLOCK
     // These vars define our audio output.
     const int samplesPerSecond = 48000;
     // for 16 bit, stereo audio, that's 4 bytes per sample
     const int bytesPerSample = sizeof(int16_t) * 2; 
+    // These vars define our tone.
+    const int toneHz = 200;
+    const int16_t toneVolume = 0xFFF;
+    const int squareWavePeriod = samplesPerSecond / toneHz;
+    const int halfWavePeriod = squareWavePeriod / 2;
+    // These vars define our buffers.
     const int sampleCount = samplesPerSecond / 60;
+    const int bufferSize = (sampleCount * 4) * bytesPerSample;
     
+    audio_ring_buffer buffer;
+
+    // A struct holding all of the various audio configuration variables.
+    SDL_AudioSpec audioSettings;
+    SDL_AudioStream *audioStream;
+ 
+    // Keeps track of what audio device we're using.
+    int deviceID;
+    
+    // Keep this one around always increasing (and looping), so we have
+    //   a constant tone.
+    unsigned int runningSampleIndex;
+
     // Private initialization functions
     bool init_SDL();
+    bool init_SDL_Audio();
     bool init_SDL_window();
     bool init_renderer();
     bool init_textures();
@@ -76,12 +108,13 @@ private:
     void delete_pixel_array();
     
     // Private functions for audio handling.
-    // static void SDLAudioCallback(void *UserData, Uint8 *AudioData, int Length);
-
+    friend void SDLAudioCallback(void *UserData, SDL_AudioStream *stream, int additional_amount, int total_amount);
+    void Audio_Callback_Function(SDL_AudioStream *stream, int additional_amount, int total_amount);
+    void GenerateSamples(bool mute);
 
 public:
-    chipperSDL();
-    ~chipperSDL();
+    chipperSDL3();
+    ~chipperSDL3();
 
     // Implemented from tehSCREEN
     // void blank_screen();
@@ -100,15 +133,7 @@ public:
     virtual unsigned char get_key_pressed() const;
 
     // Implemented from tehBEEP
-    // void SoundTick(bool mute);
-
-    void copy_audio(uint8_t* data, int size);
-
-    int get_sample_rate();
-
-    int get_bytes_per_sample();
-
-    int get_buffer_size();
+    void SoundTick(bool mute);
 };
 
 #endif
