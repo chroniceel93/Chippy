@@ -409,12 +409,6 @@ unsigned char chipperSDL::get_key_pressed() const {
 // Implemented from tehBEEP
 
 /**
- * @brief Fill buffer with audio.
- * 
- * Generates silence when mute is true, and a square wave when mute is false. 
- * 
- * Writes sound data into a ring buffer.
- * 
  * This function touches the read and write cursors for the ring buffer. Use 
  *  SDL_LockAudioDevice() before and SDL_UnlockAudioDevice() after calling this
  *  function to avoid undefined behavior.
@@ -424,9 +418,8 @@ unsigned char chipperSDL::get_key_pressed() const {
  * Either the output of this function is incorrect, audio playback is too in 
  *   Windows, or WINE is exhibiting an unknown issue. The tone sounds higher 
  *   pitched than it should.
- * 
- * @param bool Mute on true, beep on false.
  */
+
 void chipperSDL::GenerateSamples(bool mute) {
     // Initialize with Case A - The Play Cursor is ahead of the Write Cursor
     // In case A, we generate samples up to the play cursor in one contiguous 

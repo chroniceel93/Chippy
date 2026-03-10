@@ -108,6 +108,16 @@ private:
     
     // Private functions for audio handling.
     static void SDLAudioCallback(void *UserData, Uint8 *AudioData, int Length);
+    
+    /**
+ * @brief Fill buffer with audio.
+ * 
+ * Generates silence when mute is true, and a square wave when mute is false. 
+ * 
+ * Writes sound data into a ring buffer.
+ * 
+ * @param bool Mute on true, beep on false.
+ */
     void GenerateSamples(bool mute);
 
 public:
