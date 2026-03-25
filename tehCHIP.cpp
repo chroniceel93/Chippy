@@ -11,6 +11,12 @@ tehCHIP::tehCHIP(tehSCREEN& s, tehBEEP& b, tehBOOP& k, systype opMode) {
     return;
 }
 
+tehCHIP::~tehCHIP() {
+    delete(this->bus);
+    delete(this->processor);
+    return;
+}
+
 void tehCHIP::load_program(std::string filename) {
     this->disk = new tehROM(filename);
     std::string output = "";

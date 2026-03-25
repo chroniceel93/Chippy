@@ -26,7 +26,8 @@ private:
 
 public:
     tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k, chippy::systype sys = chippy::CHIP8);
-    
+    ~tehBUS();
+
     void clock_bus();
     bool get_exit_state();
 

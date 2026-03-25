@@ -9,6 +9,14 @@ tehBUS::tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k, chippy::systype sys)
     this->framebuffer = new tehVIDEO(s, sys);
     this->audiobuffer = new tehAUDIO(b);
     this->speakerState = true; // start muted
+    return;
+}
+
+tehBUS::~tehBUS() {
+    delete(this->memory);
+    delete(this->framebuffer);
+    delete(this->audiobuffer);
+    return;
 }
 
 void tehBUS::clock_bus() {

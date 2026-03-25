@@ -200,7 +200,7 @@ chipperSDL::~chipperSDL() {
     SDL_DestroyWindow(this->window);
     SDL_DestroyTexture(this->render_texture);
     SDL_DestroyTexture(this->fade_texture);
-    // this->delete_pixel_array();
+    this->delete_pixel_array();
     this->renderer = NULL;
     this->window = NULL;
     this->render_texture = NULL;

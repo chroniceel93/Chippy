@@ -30,7 +30,7 @@ public:
      */
     tehCHIP(tehSCREEN& s, tehBEEP& b, tehBOOP& k, systype opMode);
 
-    // ~tehCHIP();
+    ~tehCHIP();
 
     void load_program(std::string filename); 
 
