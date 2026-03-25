@@ -4,6 +4,7 @@
 #include "tehCOMMONZ.h"
 #include "tehRAMS.h"
 #include "tehVIDEO.h"
+#include "tehAUDIO.h"
 #include "tehSCREEN.h"
 #include "tehBOOP.h"
 #include "tehBEEP.h"
@@ -15,6 +16,7 @@ private:
     // chipperSDL chipper_sdl;
     tehRAMS* memory;
     tehVIDEO* framebuffer;
+    tehAUDIO* audiobuffer;
     tehSCREEN& screen;
     tehBEEP& speaker;
     tehBOOP& keyboard;

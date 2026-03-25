@@ -7,6 +7,7 @@ tehBUS::tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k, chippy::systype sys)
     this->system = sys;
     this->memory = new tehRAMS();
     this->framebuffer = new tehVIDEO(s, sys);
+    this->audiobuffer = new tehAUDIO(b);
     this->speakerState = true; // start muted
 }
 
@@ -14,7 +15,7 @@ void tehBUS::clock_bus() {
     this->keyboard.process_events();
     this->framebuffer->update_screen();
     // this->screen.refresh_screen();
-    this->speaker.SoundTick(this->speakerState);
+    this->audiobuffer->SoundTick(this->speakerState);
     this->speakerState = true;
     return;
 }
