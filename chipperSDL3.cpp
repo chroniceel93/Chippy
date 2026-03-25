@@ -21,10 +21,8 @@ void chipperSDL3::Audio_Callback_Function(SDL_AudioStream *stream, int additiona
     }
 
     // Copy!
-    SDL_memcpy(stream, (Uint8*)(RingBuffer->data) + RingBuffer->playCursor, Region1Size);
-    // This is horrific. Genuinely.
-    auto address = stream;
-    SDL_memcpy((void*)address+Region1Size, RingBuffer->data, Region2Size);
+    SDL_PutAudioStreamData(stream, (Uint8*)(RingBuffer->data) + RingBuffer->playCursor, Region1Size);
+    SDL_PutAudioStreamData(stream, RingBuffer->data, Region2Size);
     RingBuffer->playCursor = (RingBuffer->playCursor + total_amount) % RingBuffer->Size;
     return;
 }
@@ -34,7 +32,7 @@ void chipperSDL3::Audio_Callback_Function(SDL_AudioStream *stream, int additiona
 bool chipperSDL3::init_SDL() {
     bool result = true;
     // Dunno if OR-ing will work here
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO | SDL_INIT_EVENTS) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
         throw SDL_GetError();
         result = false;
     } else {
@@ -57,10 +55,16 @@ bool chipperSDL3::init_SDL() {
 bool chipperSDL3::init_SDL_Audio() {
     bool result = true;
 
-        // // Init SDL Audio subsystem
+    // Init SDL Audio subsystem
     // SDL_InitSubSystem(SDL_INIT_AUDIO);
 
-
+    // Initialize class variables
+    this->runningSampleIndex = 0;
+    // Initialize, and allocate the RingBuffer.
+    this->buffer.Size = this->bufferSize;
+    this->buffer.writeCursor = 0;
+    this->buffer.playCursor = 0;
+    this->buffer.data = SDL_malloc(this->buffer.Size);
 
     // Zero out buffer
     for (int i = 0; i < this->buffer.Size ; i++) {
@@ -71,12 +75,12 @@ bool chipperSDL3::init_SDL_Audio() {
     // We fill audioSettings with the values we want, and pass that to SDL.
     // Once SDL's opened the audio device, it replaces these values with
     // what it is actually using.
-    const SDL_AudioSpec spec = { SDL_AUDIO_S16LE, 2 ,this->samplesPerSecond };
+    const SDL_AudioSpec spec = { SDL_AUDIO_S16, 2 ,this->samplesPerSecond };
     this->audioStream = SDL_OpenAudioDeviceStream(
         SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK
         , &spec
-        , NULL
-        , NULL
+        , &SDLAudioCallback
+        , this
     );
     // TODO: verify this is working as you'd expect.
     return result;
@@ -217,7 +221,7 @@ chipperSDL3::chipperSDL3() {
         );
 
         // Allocate pixel array
-        // this->init_pixel_array();
+        this->init_pixel_array();
 
         // blank the screen
         // this->blank_screen();
@@ -228,14 +232,6 @@ chipperSDL3::chipperSDL3() {
         // Init SDL input variables.
         this->state = SDL_GetKeyboardState(NULL);
         this->exit = false;
-
-        // Initialize class variables
-        this->runningSampleIndex = 0;
-        // Initialize, and allocate the RingBuffer.
-        this->buffer.Size = this->bufferSize;
-        this->buffer.writeCursor = 0;
-        this->buffer.playCursor = 0;
-        this->buffer.data = SDL_malloc(this->buffer.Size);
         
         SDL_ResumeAudioDevice(SDL_GetAudioStreamDevice(this->audioStream));
         // SDL_AudioSpec playback_format;
