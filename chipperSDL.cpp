@@ -171,7 +171,7 @@ chipperSDL::chipperSDL() {
         );
 
         // Allocate pixel array
-        // this->init_pixel_array();
+        this->init_pixel_array();
 
         // blank the screen
         // this->blank_screen();
