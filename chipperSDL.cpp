@@ -1,29 +1,6 @@
 #include "chipperSDL.h"
 
-// void chipperSDL::SDLAudioCallback(void *UserData, Uint8 *AudioData, int Length) {
-//     audio_ring_buffer *RingBuffer = (audio_ring_buffer *) UserData;
-
-//     // Initialize with Case B
-//     int Region1Size = Length;
-//     int Region2Size = 0;
-//     // Test for Case A, overwrite if true
-//     // We've gotta do a bit more math here than when we're generating, so 
-//     // the logic's flipped around.
-//     // CASE B NEVER FIRES OFF- Are we doing something wrong?
-//     if (RingBuffer->playCursor + Length > RingBuffer->Size) {
-//         Region1Size = RingBuffer->Size - RingBuffer->playCursor;
-//         Region2Size = Length - Region1Size;
-//     }
-
-//     // Copy!
-//     memcpy(AudioData, (Uint8*)(RingBuffer->data) + RingBuffer->playCursor, Region1Size);
-//     memcpy(&AudioData[Region1Size], RingBuffer->data, Region2Size);
-//     RingBuffer->playCursor = (RingBuffer->playCursor + Length) % RingBuffer->Size;
-//     return;
-// }
-
 // Init SDL
-
 bool chipperSDL::init_SDL() {
     bool result = true;
     if (SDL_Init(SDL_INIT_EVERYTHING) < 0) {
@@ -173,18 +150,12 @@ chipperSDL::chipperSDL() {
         // Allocate pixel array
         this->init_pixel_array();
 
-        // blank the screen
-        // this->blank_screen();
-
         //Present the renderer
         SDL_RenderPresent(this->renderer);
 
         // Init SDL input variables.
         this->state = SDL_GetKeyboardState(NULL);
         this->exit = false;
-
-        // // Init SDL Audio subsystem
-        // SDL_InitSubSystem(SDL_INIT_AUDIO);
 
         // Initialize class variables
 
@@ -395,13 +366,6 @@ unsigned char chipperSDL::get_key_pressed() const {
 }
 
 // Implemented from tehBEEP
-
-// void chipperSDL::SoundTick(bool mute) {
-//     // SDL_LockAudioDevice(this->deviceID);
-//     // this->GenerateSamples(mute);
-//     // SDL_UnlockAudioDevice(this->deviceID);
-//     // return;
-// }
 
 void chipperSDL::copy_audio(uint8_t* data, int size) {
     SDL_QueueAudio(this->deviceID, data, (Uint32)size);

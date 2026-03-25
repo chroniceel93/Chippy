@@ -67,16 +67,7 @@ private:
     const int samplesPerSecond = 48000;
     // for 16 bit, stereo audio, that's 4 bytes per sample
     const int bytesPerSample = sizeof(int16_t) * 2; 
-    // These vars define our tone.
-    // const int toneHz = 200;
-    // const short int toneVolume = 0xFFF;
-    // const int squareWavePeriod = samplesPerSecond / toneHz;
-    // const int halfWavePeriod = squareWavePeriod / 2;
-    // These vars define our buffers.
     const int sampleCount = samplesPerSecond / 60;
-    // const int bufferSize = (sampleCount * 4) * bytesPerSample;
-    int16_t bufferPointer;
-    int bufferSize;
     
     // Private initialization functions
     bool init_SDL();
