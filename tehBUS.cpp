@@ -48,6 +48,7 @@ void tehBUS::blank_screen() {
 
 void tehBUS::set_video_mode(bool mode) {
     this->framebuffer->set_video_mode(mode);
+    return;
 }
 
 bool tehBUS::copy_sprite(int x, int y, short int addr, int len) {
@@ -75,4 +76,5 @@ bool tehBUS::test_key(unsigned char value) {
 
 void tehBUS::screm() {
     this->speakerState = false;
+    return;
 }
