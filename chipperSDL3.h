@@ -1,9 +1,9 @@
 /**
  * @file chippySDL.h
  * @author William Tradewell
- * @brief SDL2 Implementation of Interfaces.
- * @version 0.2
- * @date 2025-05-23
+ * @brief SDL3 Implementation of Interfaces.
+ * @version 0.3
+ * @date 2026-03-26
  */
 
 #ifndef CHIPPERSDL3_H_
@@ -62,28 +62,15 @@ private:
     // https://davidgow.net/handmadepenguin/ch8.html
     // https://ericscrivner.me/2017/10/getting-circular-sdl-audio/
 
-    struct audio_ring_buffer {
-        int Size; // Size of our buffer, in bytes
-        int writeCursor; // Where we will insert data into our buffer
-        int playCursor; // Where we will read data from the buffer
-        void *data;
-    };
 
     // CONSTANT BLOCK
     // These vars define our audio output.
     const int samplesPerSecond = 48000;
     // for 16 bit, stereo audio, that's 4 bytes per sample
     const int bytesPerSample = sizeof(int16_t) * 2; 
-    // These vars define our tone.
-    const int toneHz = 200;
-    const int16_t toneVolume = 0xFFF;
-    const int squareWavePeriod = samplesPerSecond / toneHz;
-    const int halfWavePeriod = squareWavePeriod / 2;
     // These vars define our buffers.
     const int sampleCount = samplesPerSecond / 60;
     const int bufferSize = (sampleCount * 4) * bytesPerSample;
-    
-    audio_ring_buffer buffer;
 
     // A struct holding all of the various audio configuration variables.
     SDL_AudioSpec audioSettings;
@@ -133,7 +120,10 @@ public:
     virtual unsigned char get_key_pressed() const;
 
     // Implemented from tehBEEP
-    void SoundTick(bool mute);
+    void copy_audio(uint8_t* data, int size);
+    int get_sample_rate();
+    int get_bytes_per_sample();
+    int get_buffer_size();
 };
 
 #endif
