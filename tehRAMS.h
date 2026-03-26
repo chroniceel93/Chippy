@@ -7,14 +7,14 @@ class tehRAMS {
 private:
     unsigned char *memory;
     size_t size;
-    bool validate_memory_access(int addr);
+    bool validate_memory_access(unsigned int addr);
 
 public:
     tehRAMS(size_t size = 4096);
     ~tehRAMS();
     void clear_tehRAMS();
-    unsigned char read_ram(int addr);
-    bool write_ram(int addr, unsigned char val);
+    unsigned char read_ram(unsigned int addr);
+    bool write_ram(unsigned int addr, unsigned char val);
 };
 
 #endif

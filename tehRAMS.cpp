@@ -3,8 +3,8 @@
 #include <stdexcept>
 #include <iostream>
 
-bool tehRAMS::validate_memory_access(int addr) {
-    return (addr >= 0 && addr < size) ? true : false;
+bool tehRAMS::validate_memory_access(unsigned int addr) {
+    return (addr < size) ? true : false;
 }
 
 tehRAMS::tehRAMS(size_t s) : size(s) {
@@ -35,19 +35,19 @@ void tehRAMS::clear_tehRAMS() {
         0xF0, 0x80, 0xF0, 0x80, 0xF0, // HEX E     - (0x046-0x04A)
         0xF0, 0x80, 0xF0, 0x80, 0x80  // HEX F     - (0x04B-0x04F)
     };
-    for (int i = 0; i < 80; i++) {
+    for (unsigned int i = 0; i < 80; i++) {
         tehRAMS::write_ram(i, data[i]);
     }
-    for (int i = 0x200; i < size; i++) {
+    for (unsigned int i = 0x200; i < size; i++) {
         tehRAMS::write_ram(i, 0);
     }
 }
 
-unsigned char tehRAMS::read_ram(int addr) {
+unsigned char tehRAMS::read_ram(unsigned int addr) {
     return tehRAMS::validate_memory_access(addr) ? memory[addr] : 255;
 }
 
-bool tehRAMS::write_ram(int addr, unsigned char val) {
+bool tehRAMS::write_ram(unsigned int addr, unsigned char val) {
     bool fail = false;
     if (tehRAMS::validate_memory_access(addr)) {
         this->memory[addr] = val;
