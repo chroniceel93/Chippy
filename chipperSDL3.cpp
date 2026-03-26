@@ -4,8 +4,7 @@
 
 bool chipperSDL3::init_SDL() {
     bool result = true;
-    // Dunno if OR-ing will work here
-    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) == false) {
         throw SDL_GetError();
         result = false;
     } else {

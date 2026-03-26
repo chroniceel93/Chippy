@@ -4,6 +4,9 @@
 tehVIDEO::tehVIDEO(tehSCREEN& s, chippy::systype sys) {
     this->screen = &s;
     this->system = sys;
+    // Initialize with sane values
+    this->fb_height = 32;
+    this->fb_width = 64;
 
     this->init_pixel_array();
     this->pixel_doubling = (this->system == chippy::SUPERCHIP10) ? true : false;
@@ -85,9 +88,6 @@ bool tehVIDEO::draw_sprite(int x, int y, int size, unsigned char (&memory)[32]) 
 
     int xpos = this->apply_wrapping_logic(x, width);
     int ypos = this->apply_wrapping_logic(y, height);
-    
-    unsigned char byte = ' ';
-    int shift = 0;
 
     // if size is 16 AND we are in hi-res mode
     if (size == 16 && !this->pixel_doubling) {

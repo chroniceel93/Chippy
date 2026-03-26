@@ -35,8 +35,8 @@ private:
     bool is_fullscreen;
     bool is_minimized;
     // Window dimensions
-    int window_height;
-    int window_width;
+    float window_height;
+    float window_width;
 
     // Variables used for tehBOOP
     SDL_Event input; // input queue

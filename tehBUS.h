@@ -14,12 +14,12 @@ private:
 // This should be given to the class from somewhere else.
 // tehCHIP would make some sense, but it feels messy.
     // chipperSDL chipper_sdl;
-    tehRAMS* memory;
-    tehVIDEO* framebuffer;
-    tehAUDIO* audiobuffer;
     tehSCREEN& screen;
     tehBEEP& speaker;
     tehBOOP& keyboard;
+    tehRAMS* memory;
+    tehVIDEO* framebuffer;
+    tehAUDIO* audiobuffer;
     bool speakerState;
 
     chippy::systype system;

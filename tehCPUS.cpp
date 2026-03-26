@@ -142,8 +142,6 @@ void tehCPUS::reset() {
  */
 
 void tehCPUS::decode_and_execute(unsigned short int inst) {
-    char err[32];
-    unsigned char tmp;
     switch (this->bitN(inst, 3)) {
     case 0x0: // Control OPs - CLS, RET
         this->decode_hex_0(inst);
@@ -237,8 +235,6 @@ void tehCPUS::decode_hex_0(unsigned short int inst) {
  */
 
 void tehCPUS::decode_hex_8(unsigned short int inst) {
-    char err[32];
-    unsigned char tmp;
     switch (inst & 0xF) {
     case 0x0: // CPR
         this->I_8XY0_COPY_X_TO_Y(inst);
@@ -282,8 +278,6 @@ void tehCPUS::decode_hex_8(unsigned short int inst) {
  */
 
 void tehCPUS::decode_hex_E(unsigned short int inst) {
-    char err[32];
-    unsigned char tmp;
     switch(this->bitsNN(inst)) {
     case 0x9E: // SKP
         this->I_EX9E_SKIP_IF_KEY(inst);
@@ -720,8 +714,7 @@ void tehCPUS::I_FX0A_READ_KEY(unsigned short int inst) {
     // We're doing this a little bit out of order! This is fine.
     // If we read in the keys and *then* test while looping over this instr-
     //  uction, we would overwrite the recorded key every time. 
-    if (this->regFile[temp] >= 0x0 && this->regFile[temp] <= 0xF
-     && this->haltPC == true) {
+    if (this->regFile[temp] <= 0xF && this->haltPC == true) {
         // If the key is still being held, beep and remain halted
         if (this->bus->test_key(this->regFile[temp])) {
             this->STreg = 4;

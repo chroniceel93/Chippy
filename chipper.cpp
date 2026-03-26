@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
     int choice = 0;
     // This loop iterates over every valid argument
     while (true) {
-        int thisOptionOptionIndex = optind ? optind : 1;
+        // int thisOptionOptionIndex = optind ? optind : 1;
         int optionIndex = 0;
         static struct option long_options[] = {
             {"mute",        no_argument,        0,  'm'},

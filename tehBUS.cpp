@@ -2,8 +2,8 @@
 
 tehBUS::tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k, chippy::systype sys) 
                  : screen(s)
-                 , keyboard(k)
-                 , speaker(b) {
+                 , speaker(b)
+                 , keyboard(k) {
     this->system = sys;
     this->memory = new tehRAMS();
     this->framebuffer = new tehVIDEO(s, sys);
