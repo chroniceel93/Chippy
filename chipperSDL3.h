@@ -93,11 +93,6 @@ private:
 
     void delete_textures();
     void delete_pixel_array();
-    
-    // Private functions for audio handling.
-    friend void SDLAudioCallback(void *UserData, SDL_AudioStream *stream, int additional_amount, int total_amount);
-    void Audio_Callback_Function(SDL_AudioStream *stream, int additional_amount, int total_amount);
-    void GenerateSamples(bool mute);
 
 public:
     chipperSDL3();
