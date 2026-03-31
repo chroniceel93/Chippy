@@ -107,7 +107,7 @@ void tehCPUS::clock_60hz() {
     return;
 }
 
-void tehCPUS::clock_sound() {
+void tehCPUS::set_sound() {
     if (this->STreg > 0) {
         this->bus->screm();
     } // else do_nothing()
