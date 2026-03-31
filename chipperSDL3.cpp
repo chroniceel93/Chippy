@@ -46,8 +46,8 @@ bool chipperSDL3::init_SDL_window() {
     // Create Window
     this->window = SDL_CreateWindow(
         "Chip-8"
-        , WINDOW_WIDTH
-        , WINDOW_HEIGHT
+        , DEFAULT_WINDOW_WIDTH
+        , DEFAULT_WINDOW_HEIGHT
         , SDL_WINDOW_RESIZABLE
     );
     // if the SDL_CreateWindow fails, then the pointer *window will be null. 
@@ -58,8 +58,8 @@ bool chipperSDL3::init_SDL_window() {
     } else {
         this->is_mouse_focus = true;
         this->is_keyboard_focus = true;
-        this->window_width = WINDOW_WIDTH;
-        this->window_height = WINDOW_HEIGHT;
+        this->window_width = DEFAULT_WINDOW_WIDTH;
+        this->window_height = DEFAULT_WINDOW_HEIGHT;
     }
     return result;
 }

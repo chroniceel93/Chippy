@@ -34,8 +34,8 @@
     ((a == chippy::SUPERCHIP10) \
     || (a == chippy::SUPERCHIP11)  ? true : false)
 
-const int WINDOW_HEIGHT = 256;
-const int WINDOW_WIDTH = 512;
+const int DEFAULT_WINDOW_HEIGHT = 256;
+const int DEFAULT_WINDOW_WIDTH = 512;
 
 namespace chippy{ 
     enum systype {

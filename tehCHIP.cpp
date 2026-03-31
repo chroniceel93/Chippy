@@ -62,7 +62,7 @@ void tehCHIP::execute()  {
             this->processor->clock_60hz();
             start = std::chrono::steady_clock::now();
         } // else, do_nothing();
-        this->processor->clock_sound();
+        this->processor->set_sound();
         // Sleeping for 0 milliseconds tells the task scheduler that we're
         //   ceding compute time to other processes. 'I can afford to wait'- But
         //   it allows for processing to resume as soon as the task scheduler 
