@@ -219,13 +219,14 @@ int tehVIDEO::apply_clipping_logic(int value, int edge) {
     return result;
 }
 
-/**
-    @brief controls pixel doubling
- **/
 void tehVIDEO::set_video_mode(bool mode) {
     this->pixel_doubling = mode;
     return;
 }
+
+bool tehVIDEO::get_video_mode() {
+    return this->pixel_doubling;
+}   
 
 void tehVIDEO::update_screen() {
     this->screen->copy_screen(this->pixel_array, this->fb_size);
@@ -245,6 +246,3 @@ int tehVIDEO::get_framebuffer_width() {
     return this->fb_width;
 }
 
-bool tehVIDEO::get_video_mode() {
-    return this->pixel_doubling;
-}

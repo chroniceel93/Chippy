@@ -57,8 +57,11 @@ private:
     bool haltPC; 
 
     // REGISTERS
+
     unsigned char regFile[16];
+
     // STACK
+
     unsigned short int stackFile[16];
     // stack pointer
     unsigned char SPreg; 
@@ -427,6 +430,7 @@ private:
     void I_FX65_LOAD_REGISTERS(unsigned short int inst);
 
 public:
+
 /**
  * @brief Construct a new tehCPUS::tehCPUS object
  * 
@@ -435,7 +439,7 @@ public:
  * @param bus pointer to the Chip8 bus object.
  */
     tehCPUS(tehBUS& bus, systype opMode);
-    
+
     // TODO: Once we have a proper interface, use these for the pause button.
     // void halt()
     // void resume()
@@ -450,12 +454,13 @@ public:
  */
     void clock_60hz();
 
-
+/**
+ * @brief If STreg is true, tell the speaker to beep.
+ */
     void set_sound();
 
 /**
  * @brief Resets the processor.
-
  */
     void reset();
 };

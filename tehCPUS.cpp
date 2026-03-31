@@ -98,6 +98,8 @@ void tehCPUS::clock_60hz() {
     return;
 }
 
+// This functionality is a little awkward. I should rewrite the sound buffer to
+// generate samples more granularly.
 void tehCPUS::set_sound() {
     if (this->STreg > 0) {
         this->bus->screm();

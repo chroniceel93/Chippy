@@ -49,14 +49,14 @@ public:
 /**
  * @brief Returns the width of the screen.
  * 
- * @return int - Width of the screen.
+ * @return Width of the screen.
  */
     virtual int get_width() = 0;
 
 /**
  * @brief Returns the height of the screen.
  * 
- * @return int - Height of the screen.
+ * @return Height of the screen.
  */
     virtual int get_height() = 0;
 };

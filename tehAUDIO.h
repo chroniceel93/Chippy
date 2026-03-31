@@ -1,3 +1,11 @@
+/**
+ * @file tehAUDIO.h
+ * @author William Tradewell
+ * @brief This class provides our CHIP-8 beeper emulation.
+ * @version 0.1
+ * @date 2026-03-30
+ */
+
 #ifndef TEH_AUDIO_H_
 #define TEH_AUDIO_H_
 

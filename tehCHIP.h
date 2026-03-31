@@ -1,3 +1,11 @@
+/**
+ * @file tehCHIP.h
+ * @author William Tradewell
+ * @brief This class manages overall emulation tasks.
+ * @version 0.1
+ * @date 2026-03-30
+ */
+
 #ifndef TEHCHIP_H_
 #define TEHCHIP_H_
 

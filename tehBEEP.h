@@ -38,21 +38,21 @@ class tehBEEP {
 /**
  * @brief Returns the configured sample rate.
  * 
- * @return int - The configured sample rate.
+ * @return The configured sample rate.
  */
     virtual int get_sample_rate() = 0;
 
 /**
  * @brief Returns the size in bytes of any audio sample.
  * 
- * @return int - The size in bytes of any audio sample.
+ * @return The size in bytes of any audio sample.
  */
     virtual int get_bytes_per_sample() = 0;
 
 /**
  * @brief Returns the size in bytes of queued audio in the buffer.
  * 
- * @return int - The size in bytes of queued audio in the buffer.
+ * @return The size in bytes of queued audio in the buffer.
  */
     virtual int get_buffer_size() = 0;
 };

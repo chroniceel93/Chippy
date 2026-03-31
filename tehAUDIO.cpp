@@ -54,10 +54,6 @@ void tehAUDIO::sendDataToBuffer(int len) {
 }
 
 /**
- * This function touches the read and write cursors for the ring buffer. Use 
- *  SDL_LockAudioDevice() before and SDL_UnlockAudioDevice() after calling this
- *  function to avoid undefined behavior.
- * 
  * NOTICE:
  * 
  * Either the output of this function is incorrect, audio playback is too in 
