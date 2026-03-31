@@ -64,11 +64,6 @@ bool tehCPUS::is_HP48_family_quirk(systype t) {
     return (t == chippy::CHIP48) && (t == chippy::SUPERCHIP10);
 }
 
-
-bool tehCPUS::halt() {
-    return false;
-}
-
 /**
  * For each cycle, we want to first, fetch the instruction from memory at the
  *   location pointed to by the Program Counter (this->PC). This involves two

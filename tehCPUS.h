@@ -444,8 +444,9 @@ public:
  */
     tehCPUS(tehBUS& bus, systype opMode);
     
-// NO HALTING MECHANISM PRESENT
-    bool halt();
+    // TODO: Once we have a proper interface, use these for the pause button.
+    // void halt()
+    // void resume()
 
 /**
  * @brief Main processor clock.
