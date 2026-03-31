@@ -17,32 +17,20 @@
 #include "SDL3/SDL_main.h"
 #include "SDL3/SDL_audio.h"
 
-class chipperSDL3: public tehSCREEN, public tehBOOP, public tehBEEP {
+/**
+ * @brief chipperSDL3 implements the tehSCREEN, tehBEEP, and tehBOOP interfaces.
+ * 
+ * This class provides implementations for the tehSCREEN, tehBEEP, and tehBooP
+ *  interfaces using SDL3 to handle screen drawing, video output, and input 
+ *  handling. A pointer to this class can be passed to one or more objects
+ *  expecting any of these these interfaces.
+ * 
+ * In fact, it would likely lead to problems if more than one instance of 
+ *  chipperSDL3 were to be created. Please, instance chipperSDL3 once, and pass
+ *  a pointer to that original object as needed.
+ */
+class chipperSDL3: public tehSCREEN, public tehBEEP, public tehBOOP {
 private:
-    // Variables used for tehSCREEN
-    bool SDL_Status; // Hold copy of SDL Status code.
-    uint32_t *pixel_array; // Array of pixels used to build display texture.
-    SDL_Texture *render_texture; // Pointer to the render texture.
-    SDL_Texture *fade_texture;
-    SDL_Renderer *renderer; // Pointer to the renderer.
-    SDL_Color background, foreground; // TODO: use these to replace hardcoded values
-    SDL_FRect texrect;
-    int vbuf_h, vbuf_w;
-    // Variables used to handle widnow state
-    SDL_Window *window; // Pointer to our window.
-    bool is_mouse_focus;
-    bool is_keyboard_focus;
-    bool is_fullscreen;
-    bool is_minimized;
-    // Window dimensions
-    float window_height;
-    float window_width;
-
-    // Variables used for tehBOOP
-    SDL_Event input; // input queue
-    const bool *state;
-    bool exit;
-
     struct mapping {
         SDL_Scancode external_code;
     };
@@ -54,20 +42,40 @@ private:
         SDL_SCANCODE_4, SDL_SCANCODE_R, SDL_SCANCODE_F, SDL_SCANCODE_V
     };
 
-    // Variables used for tehBEEP
-        // Credit to David Gow's Handmade Penguin tutorial, Getting Circular with
-    //  SDL Audio by Eric Scrivner, and to LazyFoo's SDL tutorial, with which I 
-    //  kludged together something that barely works!
-    // https://lazyfoo.net/tutorials/SDL/
-    // https://davidgow.net/handmadepenguin/ch8.html
-    // https://ericscrivner.me/2017/10/getting-circular-sdl-audio/
+    bool SDL_Status; // Hold copy of SDL Status code.
 
+    // Variables used for framebuffer
+    uint32_t *pixel_array; // Array of pixels used to build display texture.
+    SDL_Texture *render_texture; // Pointer to the render texture.
+    SDL_Texture *fade_texture;
+    SDL_Renderer *renderer; // Pointer to the renderer.
+    SDL_Color background, foreground; // TODO: use these to replace hardcoded values
+    SDL_FRect texrect;
+    int vbuf_h, vbuf_w;
+
+    // Variables used to handle widnow state
+    SDL_Window *window; // Pointer to our window.
+    bool is_mouse_focus;
+    bool is_keyboard_focus;
+    bool is_fullscreen;
+    bool is_minimized;
+
+    // Window dimensions
+    float window_height;
+    float window_width;
+
+    // Variables used for tehBOOP
+    SDL_Event input; // input queue
+    const bool *state;
+    bool exit;
 
     // CONSTANT BLOCK
     // These vars define our audio output.
     const int samplesPerSecond = 48000;
+
     // for 16 bit, stereo audio, that's 4 bytes per sample
     const int bytesPerSample = sizeof(int16_t) * 2; 
+
     // These vars define our buffers.
     const int sampleCount = samplesPerSecond / 60;
     const int bufferSize = (sampleCount * 4) * bytesPerSample;
@@ -83,7 +91,7 @@ private:
     //   a constant tone.
     unsigned int runningSampleIndex;
 
-    // Private initialization functions
+    // Private initialization functions.
     bool init_SDL();
     bool init_SDL_Audio();
     bool init_SDL_window();
@@ -91,6 +99,7 @@ private:
     bool init_textures();
     void init_pixel_array();
 
+    // Helper functions to clean up allocated memory.
     void delete_textures();
     void delete_pixel_array();
 
@@ -99,14 +108,11 @@ public:
     ~chipperSDL3();
 
     // Implemented from tehSCREEN
-    // void blank_screen();
-    // bool draw_point(int x, int y);
     void copy_screen(bool* data, int size);
     void refresh_screen();
     void set_resolution(int w, int h);
     int get_width();
     int get_height();
-
 
     // Implemented from tehBOOP
     virtual void process_events();

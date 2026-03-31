@@ -144,6 +144,7 @@ chipperSDL3::chipperSDL3() {
     this->foreground.r = 255;
     this->foreground.g = 255;
     this->foreground.b = 255;
+
     // Sane defaults, but expect these to be overidden later on
     this->vbuf_w = 64;
     this->vbuf_h = 32;
@@ -153,8 +154,10 @@ chipperSDL3::chipperSDL3() {
     this->texrect.y = 0;
     this->texrect.w = this->vbuf_w;
     this->texrect.h = this->vbuf_h;
+
     // First and foremost, let's see if we can get SDL
     this->SDL_Status = this->init_SDL();
+    
     // Now, let's check if SDL is up and running, and then init everything else.
     if (this->SDL_Status) {
         // Set the initial (background) drawing color.
@@ -168,9 +171,6 @@ chipperSDL3::chipperSDL3() {
 
         // Allocate pixel array
         this->init_pixel_array();
-
-        // blank the screen
-        // this->blank_screen();
 
         //Present the renderer
         SDL_RenderPresent(this->renderer);
@@ -187,18 +187,19 @@ chipperSDL3::chipperSDL3() {
 }
 
 chipperSDL3::~chipperSDL3() {
-    // // Clean up SDL Audio
-    // SDL_PauseAudioDevice(this->deviceID);
+    // Clean up SDL Audio
     SDL_CloseAudioDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK);
-    // Clean up SDL Rendering
+    // Clean up SDL Rendering/Textures
     SDL_DestroyRenderer(this->renderer);
-    SDL_DestroyWindow(this->window);
     SDL_DestroyTexture(this->render_texture);
     SDL_DestroyTexture(this->fade_texture);
     this->delete_pixel_array();
     this->renderer = NULL;
-    this->window = NULL;
     this->render_texture = NULL;
+    // Clean up Window
+    SDL_DestroyWindow(this->window);
+    this->window = NULL;
+    // Exit SDL
     SDL_Quit();
     return;
 }
@@ -219,9 +220,9 @@ void chipperSDL3::refresh_screen() {
     this->texrect.w = this->vbuf_w;
     this->texrect.h = this->vbuf_h;
     // Update texture with updated values
-// Normally you would want to stream the texture, but I found that there's
-// quite a lot more overhead with textures this small, than simply updating
-// it.   
+    // Normally you would want to stream the texture, but I found that there's
+    // quite a lot more overhead with textures this small, than simply updating
+    // it.   
     // TODO: Method to grab data from vram
     SDL_UpdateTexture(this->render_texture, NULL, this->pixel_array, 4 * this->vbuf_w);
     
