@@ -60,10 +60,6 @@ std::string tehCPUS::build_unknown_instruction_error(unsigned short int inst) {
     return result;
 }
 
-bool tehCPUS::is_HP48_family_quirk(systype t) {
-    return (t == chippy::CHIP48) && (t == chippy::SUPERCHIP10);
-}
-
 /**
  * For each cycle, we want to first, fetch the instruction from memory at the
  *   location pointed to by the Program Counter (this->PC). This involves two
@@ -355,7 +351,7 @@ void tehCPUS::I_00EE_RET() {
 }
 
 void tehCPUS::I_00FE_DISABLE_HIRES() {
-    if (this->target == chippy::SUPERCHIP10) {
+    if (IS_SUPERCHIP(this->target)) {
         this->bus->set_video_mode(true);
         // this->bus->set_resolution(64, 32);
     } // else {do_nothing}
@@ -363,7 +359,7 @@ void tehCPUS::I_00FE_DISABLE_HIRES() {
 }
 
 void tehCPUS::I_00FF_ENABLE_HIRES() {
-    if (this->target == chippy::SUPERCHIP10) {
+    if (IS_SUPERCHIP(this->target)) {
         this->bus->set_video_mode(false);
         // this->bus->set_resolution(128, 64);
     } // else {do_nothing}
@@ -620,7 +616,7 @@ void tehCPUS::I_ANNN_LOAD_IREG(unsigned short int inst) {
 void tehCPUS::I_BNNN_JUMP_TO_OFFSET(unsigned short int inst) {
     if (this->target == chippy::CHIP8) {
     this->PC = this->regFile[0x0] + this->bitsNNN(inst) - 2;
-    } else if (this->is_HP48_family_quirk(this->target)) {
+    } else if (IS_HP48(this->target)) {
         this->PC = this->regFile[(int) this->bitN(inst, 2)] + this->bitsNN(inst) - 2;
     }
     return;
@@ -779,7 +775,7 @@ void tehCPUS::I_FX55_SAVE_REGISTERS(unsigned short int inst) {
         this->Ireg++;
     }
     // Bug in CHIP48, SUPERCHIP10, SUPERCHIP 11, ireg off by one
-    if (this->is_HP48_family_quirk(this->target)) {
+    if (IS_HP48(this->target)) {
         this->Ireg--;
     }
     return;
@@ -798,7 +794,7 @@ void tehCPUS::I_FX65_LOAD_REGISTERS(unsigned short int inst) {
         this->Ireg++;
     }
         // Bug in CHIP48, SUPERCHIP10, SUPERCHIP 11, ireg off by one
-    if (this->is_HP48_family_quirk(this->target)) {
+    if (IS_HP48(this->target)) {
         this->Ireg--;
     }
     return;

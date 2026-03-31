@@ -118,14 +118,6 @@ private:
     std::string build_unknown_instruction_error(unsigned short int inst);
 
 /**
- * @brief Checks to see if a given systype should have HP48 family quirks.
- * 
- * @param t The system type we are checking against.
- * @return bool - true if systype is in the HP48 family.
- */
-    bool is_HP48_family_quirk(systype t);
-
-/**
  * @brief Decode, and execute an instruction.
  * 
  * @param inst Instruction to decode and execute.

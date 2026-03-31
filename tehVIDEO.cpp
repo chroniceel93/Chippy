@@ -31,6 +31,10 @@ void tehVIDEO::init_pixel_array() {
             this->fb_height = 64;
             this->fb_width = 128;
             break;
+        default:
+            this->fb_height = 32;
+            this->fb_width = 64;
+            break;
     }
     this->screen->set_resolution(this->fb_width, this->fb_height);
     this->fb_size = sizeof(bool) * this->fb_height * this->fb_width;
@@ -89,8 +93,8 @@ bool tehVIDEO::draw_sprite(int x, int y, int size, unsigned char (&memory)[32]) 
     int xpos = this->apply_wrapping_logic(x, width);
     int ypos = this->apply_wrapping_logic(y, height);
 
-    // if size is 16 AND we are in hi-res mode
-    if (size == 16 && !this->pixel_doubling) {
+    // if size is 16 AND we are in SUPERCHIP quirks mode
+    if (size == 16 && IS_SUPERCHIP(this->system)) {
         for (int i = 0; i < size * 2; i += 2) {
             if (this->draw_byte(xpos, ypos + (i / 2), memory[i])) {
                 flipped = true;
