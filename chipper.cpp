@@ -34,6 +34,7 @@ int WinMain(int argc, char *argv[]) {
 int main(int argc, char *argv[]) {
 #endif
     chipperSDL3* sdl;
+    chipperFLTK* fltk;
     chippy::tehCHIP* b;
 
     std::string romFileName = "";
@@ -104,12 +105,16 @@ int main(int argc, char *argv[]) {
         }
     } // else do_nothing(), we have a valid file.
 
+    // New logic, if no file name provided, start with blank interpreter.
+
     if (romFileName == "") {
         std::cout << "Rom file not specified!\n";
     } else {
         try {
+            // FLTK MUST be initialized before SDL.
+            fltk = new chipperFLTK();
             sdl = new chipperSDL3();
-            b = new chippy::tehCHIP(*sdl, *sdl, *sdl, compat);
+            b = new chippy::tehCHIP(*sdl, *sdl, *sdl, *fltk, compat);
             b->load_program(romFileName);
             b->execute();
             std::cout << "Exiting program!" << std::endl;

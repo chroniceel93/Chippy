@@ -22,14 +22,14 @@ public:
     /**
      * @brief Calls the implementation's event handling loop.
      */
-    virtual void process_events() = 0;
+    virtual void process_keypad_events() = 0;
 
     /**
      * @brief Polls for an exit signal.
      * 
      * @returns If true, we should exit the program. Otherwise, continue.
      */
-    virtual bool get_exit_state() const = 0;
+    // virtual bool get_exit_state() const = 0;
 
     /**
      * @brief Checks to see if a given key is pressed.
