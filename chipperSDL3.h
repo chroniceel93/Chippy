@@ -114,7 +114,7 @@ public:
 
 
     // Implemented from tehBOOP
-    virtual void process_events();
+    virtual void process_keypad_events();
     virtual bool get_exit_state() const;
     virtual bool is_key_pressed(unsigned char value) const;
     virtual unsigned char get_key_pressed() const;

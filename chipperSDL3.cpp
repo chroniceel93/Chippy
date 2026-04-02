@@ -257,7 +257,7 @@ int chipperSDL3::get_height() {
 }
 
 // Implemented from tehBOOP
-void chipperSDL3::process_events() {
+void chipperSDL3::process_keypad_events() {
     SDL_Event input;
     while (SDL_PollEvent(&input)) {
         switch (input.type) {

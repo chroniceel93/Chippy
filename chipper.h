@@ -2,6 +2,7 @@
 #include "tehCOMMONZ.h"
 // #include "chipperSDL.h"
 #include "chipperSDL3.h"
+#include "chipperFLTK.h"
 
 // #include <nfd.h>
 #include <iostream>

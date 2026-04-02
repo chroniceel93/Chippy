@@ -1,9 +1,14 @@
 #include "tehBUS.h"
 
-tehBUS::tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k, chippy::systype sys) 
+tehBUS::tehBUS(tehSCREEN& s
+             , tehBEEP& b
+             , tehBOOP& k
+             , tehGUI& g
+             , chippy::systype sys) 
                  : screen(s)
                  , speaker(b)
-                 , keyboard(k) {
+                 , keyboard(k)
+                 , gui(g) {
     this->system = sys;
     this->memory = new tehRAMS();
     this->framebuffer = new tehVIDEO(s, sys);
@@ -20,7 +25,8 @@ tehBUS::~tehBUS() {
 }
 
 void tehBUS::clock_bus() {
-    this->keyboard.process_events();
+    this->keyboard.process_keypad_events();
+    this->gui.process_gui_events();
     this->framebuffer->update_screen();
     // this->screen.refresh_screen();
     this->audiobuffer->SoundTick(this->speakerState);
@@ -29,7 +35,7 @@ void tehBUS::clock_bus() {
 }
 
 bool tehBUS::get_exit_state() {
-    return this->keyboard.get_exit_state();
+    return this->gui.get_exit_state();
 }
 
 unsigned char tehBUS::read_ram(int addr) {

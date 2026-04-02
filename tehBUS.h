@@ -8,6 +8,7 @@
 #include "tehSCREEN.h"
 #include "tehBOOP.h"
 #include "tehBEEP.h"
+#include "tehGUI.h"
 
 class tehBUS {
 private:
@@ -17,6 +18,7 @@ private:
     tehSCREEN& screen;
     tehBEEP& speaker;
     tehBOOP& keyboard;
+    tehGUI& gui;
     tehRAMS* memory;
     tehVIDEO* framebuffer;
     tehAUDIO* audiobuffer;
@@ -25,7 +27,13 @@ private:
     chippy::systype system;
 
 public:
-    tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k, chippy::systype sys = chippy::CHIP8);
+    tehBUS(
+          tehSCREEN& s
+        , tehBEEP& b
+        , tehBOOP& k
+        , tehGUI& g
+        , chippy::systype sys = chippy::CHIP8
+    );
     ~tehBUS();
 
     void clock_bus();
