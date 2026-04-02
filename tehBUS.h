@@ -16,6 +16,7 @@
 #include "tehSCREEN.h"
 #include "tehBOOP.h"
 #include "tehBEEP.h"
+#include "tehGUI.h"
 
 /**
  * @brief tehBUS connects all of our interfaces together.
@@ -43,6 +44,7 @@ private:
     tehSCREEN& screen;
     tehBEEP& speaker;
     tehBOOP& keyboard;
+    tehGUI& gui;
     tehRAMS* memory;
     tehVIDEO* framebuffer;
     tehAUDIO* audiobuffer;
@@ -59,9 +61,16 @@ public:
      * @param s A pointer to any class that implements tehSCREEN.
      * @param b A pointer to any class that implements tehBEEP.
      * @param k A pointer to any class that implements tehBOOP.
+     * @param g A pointer to any class that implements tehGUI.
      * @param sys The value identifying the current quirks mode.
      */
-    tehBUS(tehSCREEN& s, tehBEEP& b, tehBOOP& k, chippy::systype sys = chippy::CHIP8);
+    tehBUS(
+          tehSCREEN& s
+        , tehBEEP& b
+        , tehBOOP& k
+        , tehGUI& g
+        , chippy::systype sys = chippy::CHIP8
+    );
     
     /**
      * @brief The tehBUS class destructor.

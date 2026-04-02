@@ -36,7 +36,7 @@ public:
      * @param k Reference to an input object, to be used by the system.
      * @param opMode Sets the quirks and operating mode of the system.
      */
-    tehCHIP(tehSCREEN& s, tehBEEP& b, tehBOOP& k, systype opMode);
+    tehCHIP(tehSCREEN& s, tehBEEP& b, tehBOOP& k, tehGUI& g, systype opMode);
 
     ~tehCHIP();
 

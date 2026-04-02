@@ -24,6 +24,7 @@ set(SOURCE_FILES
     tehVIDEO.cpp
     tehAUDIO.cpp
     chipperSDL3.cpp
+    chipperFLTK.cpp
 )
 
 # 1. Look for a SDL2 package, 2. look for the SDL2 component and 3. fail if none can be found
@@ -32,6 +33,19 @@ set(SOURCE_FILES
 # find_package(SDL2 REQUIRED CONFIG COMPONENTS SDL2main)
 # And again for SDL3
 find_package(SDL3 REQUIRED CONFIG REQUIRED COMPONENTS SDL3)
+
+
+find_package(FLTK)
+
+if(FLTK_FOUND AND NOT TARGET fltk::fltk)
+  add_library(fltk::fltk INTERFACE IMPORTED)
+  set_target_properties(
+    fltk::fltk
+    PROPERTIES
+      INTERFACE_INCLUDE_DIRECTORIES "${FLTK_INCLUDE_DIR}"
+      INTERFACE_LINK_LIBRARIES "${FLTK_LIBRARIES}"
+  )
+endif()
 
 add_executable(chippy8 ${SOURCE_FILES})
 
@@ -76,4 +90,4 @@ add_executable(chippy8 ${SOURCE_FILES})
 # SDL2::SDL2main is required for windows GUI stuff. It may, or may not exist depending on system.
 # `
 
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 ${SYSTEM_LIBS})
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 fltk::fltk ${SYSTEM_LIBS})
