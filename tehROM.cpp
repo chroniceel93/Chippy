@@ -1,21 +1,28 @@
 #include "tehROM.h"
 
 tehROM::tehROM() {
-
+    // Init to sane defaults
+    this->fileSize = 0;
+    this->chunkTotal = 0;
+    this->currentChunk = 0;
+    return;
 }
 
 tehROM::tehROM(std::string filename) {
-    read_file_size(filename);
+    this->read_file_size(filename);
     this->currentChunk = 0;
     if (this->fileSize > 0) {
         this->file.open(filename.c_str(), std::ios::binary | std::ios::in);
     } else {
         throw std::range_error("fileSize < 0 - File not found.");
     }
+    return;
 }
 
+// Should we handle the case where there's no file?
 tehROM::~tehROM() {
     this->file.close();
+    return;
 }
 
 void tehROM::read_file_size(std::string filename) {
@@ -23,6 +30,7 @@ void tehROM::read_file_size(std::string filename) {
     int rc = stat(filename.c_str(), &stat_buf);
     this->fileSize = rc == 0 ? stat_buf.st_size : -1;
     this->chunkTotal = this->fileSize / this->chunkSize;
+    return;
 }
 
 bool tehROM::get_eof() {

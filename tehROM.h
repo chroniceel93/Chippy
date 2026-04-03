@@ -1,3 +1,11 @@
+/**
+ * @file tehROM.h
+ * @author William Tradewell
+ * @brief Here we handle loading the ROM into memory.
+ * @version 1.1
+ * @date 2026-03-30
+ */
+
 #ifndef TEHROM_H_
 #define TEHROM_H_
 
@@ -11,15 +19,35 @@
 /**
  * @class tehROM
  * @brief A class for reading a file into memory in chunks.
+ * 
+ * This class allows us to access, and read into memory a ROM file in chunks of
+ *  256 bytes. In its current state, it is very simple, only needing to read in
+ *  one file, once - But as designed, it should be fairly easy to extend this to
+ *  sek back and forth getting data from larger files.
+ * 
+ * I might be able to repurpose this later into saving, and loading a system 
+ *  state.
  */
 class tehROM {
 private:
-    static const short int chunkSize = 256; /**< Size of each chunk to be read from the file. */
-    long fileSize; /**< Size of the file, in bytes. */
-    int chunkTotal; /**< Total number of chunks of size chunkSize. */
-    int currentChunk; /**< Index of the current chunk being read. */
-    std::fstream file; /**< File stream object used to open and read the file. */
-    std::string fileName; /**< Name of the file to be read. */
+    /**< Size of each chunk to be read from the file. */
+    static const short int chunkSize = 256;
+    /**< Size of the file, in bytes. */
+    long fileSize;
+    /**< Total number of chunks of size chunkSize. */
+    int chunkTotal;
+    /**< Index of the current chunk being read. */
+    int currentChunk;
+    /**< File stream object used to open and read the file. */
+    std::fstream file; 
+    /**< Name of the file to be read. */
+    std::string fileName; 
+
+    /**
+     * @brief Determines the size of a file.
+     * @param filename The name of the file.
+     */
+    void read_file_size(std::string filename);
 public:
     /**
      * @brief Default constructor.
@@ -33,19 +61,13 @@ public:
     tehROM(std::string filename);
 
     /**
-     * @brief Destructor.
+     * @brief Destructor that closes the open file.
      */
     ~tehROM();
 
     /**
-     * @brief Determines the size of the file and calculates the total number of chunks.
-     * @param filename The name of the file.
-     */
-    void read_file_size(std::string filename);
-
-    /**
      * @brief Checks if the end of the file has been reached.
-     * @return true if the end of the file has been reached, false otherwise.
+     * @return True if the end of the file has been reached, otherwise False.
      */
     bool get_eof();
 
