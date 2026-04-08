@@ -34,10 +34,9 @@
     ((a == chippy::SUPERCHIP10) \
     || (a == chippy::SUPERCHIP11)  ? true : false)
 
-const int DEFAULT_WINDOW_HEIGHT = 256;
-const int DEFAULT_WINDOW_WIDTH = 512;
-
 namespace chippy{ 
+    const int DEFAULT_WINDOW_HEIGHT = 256;
+    const int DEFAULT_WINDOW_WIDTH = 512;
     enum systype {
         CHIP8, CHIP48, SUPERCHIP10, SUPERCHIP11
     };    

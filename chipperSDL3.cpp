@@ -42,12 +42,14 @@ bool chipperSDL3::init_SDL_Audio() {
 }
 
 bool chipperSDL3::init_SDL_window() {
+    this->window_width = chippy::DEFAULT_WINDOW_WIDTH;
+    this->window_height = chippy::DEFAULT_WINDOW_HEIGHT;
     bool result = true;
     // Create Window
     this->window = SDL_CreateWindow(
         "Chip-8"
-        , DEFAULT_WINDOW_WIDTH
-        , DEFAULT_WINDOW_HEIGHT
+        , this->window_width
+        , this->window_height
         , SDL_WINDOW_RESIZABLE
     );
     // if the SDL_CreateWindow fails, then the pointer *window will be null. 
@@ -58,8 +60,7 @@ bool chipperSDL3::init_SDL_window() {
     } else {
         this->is_mouse_focus = true;
         this->is_keyboard_focus = true;
-        this->window_width = DEFAULT_WINDOW_WIDTH;
-        this->window_height = DEFAULT_WINDOW_HEIGHT;
+
     }
     return result;
 }

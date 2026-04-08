@@ -1,6 +1,15 @@
 #include "chipperFLTK.h"
 
 chipperFLTK::chipperFLTK() {
+    this->main_window = new Fl_Window(340, 180);
+    this->box = new Fl_Box(20, 40, 300, 100, "Hello, World!");
+    this->box->box(FL_UP_BOX);
+    this->box->labelfont(FL_BOLD + FL_ITALIC);
+    this->box->labelsize(36);
+    this->box->labeltype(FL_SHADOW_LABEL);
+    this->main_window->end();
+    this->main_window->show();
+    this->is_exit = false;
     return;
 }
 
@@ -37,9 +46,12 @@ void chipperFLTK::set_interpreter_speed(int interpreter_speed) {
 }
 
 void chipperFLTK::process_gui_events() {
+    if (Fl::check() == 0) {
+        this->is_exit = true;
+    }
     return;
 }
 
 bool chipperFLTK::get_exit_state() {
-    return false;
+    return this->is_exit;
 }

@@ -16,6 +16,7 @@ tehRAMS::~tehRAMS() {
     delete[] memory;
 }
 
+/** TODO: We might want to init with different data. */
 void tehRAMS::clear_tehRAMS() {
     unsigned char data[80] = {
         0xF0, 0x90, 0x90, 0x90, 0xF0, // HEX ZERO  - (0x000-0x004)

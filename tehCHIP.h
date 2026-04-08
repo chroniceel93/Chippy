@@ -20,11 +20,21 @@
 
 namespace chippy {
 
-    class tehCHIP {
+/**
+ * @brief The entry point for the CHIP-8 Interpreter.
+ * 
+ * This class initializes all other classes, and provides the basic loop that
+ *  drives all of the emulated components.
+ */
+class tehCHIP {
 private:
+    /** A pointer to the current ROM file. */
     tehROM *disk;
+    /** A pointer to the current system BUS. */
     tehBUS *bus;
+    /** A pointer to our processor. */
     tehCPUS *processor;
+    /** Contains our current quirks mode. */
     systype operating_mode;
 
 public:
@@ -38,12 +48,28 @@ public:
      */
     tehCHIP(tehSCREEN& s, tehBEEP& b, tehBOOP& k, tehGUI& g, systype opMode);
 
+    /**
+     * @brief Destructs the Chip-8 interpreter.
+     */
     ~tehCHIP();
 
+    /**
+     * @brief Loads a ROM file to the system memory.
+     * 
+     * @param filename A  valid path to the ROM file we will load.
+     */
     void load_program(std::string filename); 
 
+    /**
+     * @brief This function starts the main execution loop of the program.
+     */
     void execute();
 
+    /**
+     * @brief This function resets the system.
+     * 
+     * TODO: Either re-create all objects, or make methods to reset their states
+     */
     void reset_system();
     };
 }
