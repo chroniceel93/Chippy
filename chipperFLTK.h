@@ -8,6 +8,11 @@
 #include <FL/Fl_Box.H>
 
 class chipperFLTK: public tehGUI{
+private:
+    Fl_Window *main_window;
+    Fl_Box *box;
+
+    bool is_exit;
 public:
     chipperFLTK();
     ~chipperFLTK();
