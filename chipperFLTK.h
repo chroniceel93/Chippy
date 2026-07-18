@@ -4,6 +4,7 @@
 #include "tehGUI.h"
 
 #include <FL/Fl.H>
+#include <FL/Fl_Button.H>
 #include <FL/Fl_Window.H>
 #include <FL/Fl_Box.H>
 
@@ -11,15 +12,17 @@ class chipperFLTK: public tehGUI{
 private:
     Fl_Window *main_window;
     Fl_Box *box;
+    Fl_Button *paws;
 
     bool is_exit;
+    bool is_paused;
 public:
     chipperFLTK();
     ~chipperFLTK();
 
     void load_rom(std::string filename);
 
-    void system_pause();
+    static void system_pause(Fl_Widget*, void* v);
     void system_resume();
 
     chippy::systype get_quirks_mode();
