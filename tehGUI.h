@@ -9,16 +9,16 @@ class tehGUI {
 public:
     virtual ~tehGUI() {}
 
-    virtual void load_rom(std::string filename) = 0;
+    // virtual void load_rom(std::string filename) = 0;
 
-    virtual void system_pause() = 0;
-    virtual void system_resume() = 0;
+    // virtual void system_pause() = 0;
+    // virtual void system_resume() = 0;
 
     virtual chippy::systype get_quirks_mode() = 0;
-    virtual void set_quirks_mode(chippy::systype quirks_mode) = 0;
+    // virtual void set_quirks_mode(chippy::systype quirks_mode) = 0;
 
     virtual int get_interpreter_speed() = 0;
-    virtual void set_interpreter_speed(int interpreter_speed) = 0;
+    // virtual void set_interpreter_speed(int interpreter_speed) = 0;
 
     virtual void process_gui_events() = 0;
     virtual bool get_exit_state() = 0;
@@ -36,5 +36,10 @@ public:
  * 1. Get/Set CPU state
  * 2. Get/Set RAM state - Possibly for debugger?
  */
+
+ // NOTE: A lot of this stuff is internal to the GUI class and doesn't need to
+ // be defined inside of an interface.
+
+ // Focus on figuring out how I'm going to handle message passing.
 
 #endif
