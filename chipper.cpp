@@ -33,10 +33,16 @@ int WinMain(int argc, char *argv[]) {
 #else
 int main(int argc, char *argv[]) {
 #endif
-    chipperSDL3* sdl;
-    chipperFLTK* fltk;
+    // chipperSDL3* sdl;
+    // chipperFLTK* fltk;
+    tehGUI *gui;
+    tehBEEP *bep;
+    tehBOOP *bop;
+    tehSCREEN *scr;
     chippy::tehCHIP* b;
 
+    bool enableSDL = true;
+    bool enableFLTK = true;
     std::string romFileName = "";
     chippy::systype compat = chippy::CHIP8; // we default to Chip-8 compat.
  
@@ -52,6 +58,8 @@ int main(int argc, char *argv[]) {
             {"superchip",   no_argument,        0,  's'},
             {"rom",         required_argument,  0,  'r'},
             {"help",        no_argument,        0,  'h'},
+            {"null",        no_argument,        0,  'N'},
+            {"sdl_only",    no_argument,        0,  'S'},
             {0,             0,                  0,  0}
         };
         choice = getopt_long(argc, argv, "mfsr", long_options, &optionIndex);
@@ -87,6 +95,14 @@ int main(int argc, char *argv[]) {
             case 'p':
                 compat = chippy::CHIP48;
                 break;
+            case 'N':
+                enableSDL = false;
+                enableFLTK = false;
+                break;
+            case 'S':
+                enableSDL = true;
+                enableFLTK = false;
+                break;
             default:
                 // do_nothing();
                 break;
@@ -111,15 +127,49 @@ int main(int argc, char *argv[]) {
         std::cout << "Rom file not specified!\n";
     } else {
         try {
+// TODO: Possibly use chipperNULL as a fallback in case SDL fails?
+            if (!enableFLTK && !enableSDL) {
+/* When we pass the new chipperNULL objec to gui, it is implicitly cast to type
+   tehGUI, and so to pass the pointer to chipperNULL onwards, we need to undo
+   it with a static cast to the chipperNULL pointer type. We do this with 
+   chipperSDL3 too, where appropriate.
+*/
+                gui = new chipperNULL();
+                scr = static_cast<chipperNULL*>(gui);
+                bep = static_cast<chipperNULL*>(gui);
+                bop = static_cast<chipperNULL*>(gui);
+            } else if (!enableFLTK) {
+                // Window handling is broken for SDL_Only case
+                // Exit events no longer work.
+                gui = new chipperNULL();
+                scr = new chipperSDL3();
+                bep = static_cast<chipperSDL3*>(scr);
+                bop = static_cast<chipperSDL3*>(scr);
+            } else {
+                gui = new chipperFLTK();
+                scr = new chipperSDL3();
+                bep = static_cast<chipperSDL3*>(scr);
+                bop = static_cast<chipperSDL3*>(scr);
+            }
+            b = new chippy::tehCHIP(*scr, *bep, *bop, *gui, compat);
             // FLTK MUST be initialized before SDL.
-            fltk = new chipperFLTK();
-            sdl = new chipperSDL3();
-            b = new chippy::tehCHIP(*sdl, *sdl, *sdl, *fltk, compat);
             b->load_program(romFileName);
             b->execute();
             std::cout << "Exiting program!" << std::endl;
             delete b;
-            delete sdl;
+            // It's overkill
+            if (gui != NULL) {
+                delete gui;
+            }
+            if (scr != NULL) {
+                delete scr;
+            }
+            if (bep != NULL) {
+                delete bep;
+            }
+            if (bop != NULL) {
+                delete bop;
+            }
         } catch (const std::out_of_range &e) {
             std::cout << "Out of range error: " << e.what() << std::endl;
         } catch (const std::exception &e) {

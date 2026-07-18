@@ -25,6 +25,7 @@ set(SOURCE_FILES
     tehAUDIO.cpp
     chipperSDL3.cpp
     chipperFLTK.cpp
+    chipperNULL.cpp
 )
 
 # 1. Look for a SDL2 package, 2. look for the SDL2 component and 3. fail if none can be found

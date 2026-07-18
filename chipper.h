@@ -1,6 +1,7 @@
 #include "tehCHIP.h"
 #include "tehCOMMONZ.h"
 // #include "chipperSDL.h"
+#include "chipperNULL.h"
 #include "chipperSDL3.h"
 #include "chipperFLTK.h"
 
