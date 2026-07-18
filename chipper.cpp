@@ -157,18 +157,11 @@ int main(int argc, char *argv[]) {
             b->execute();
             std::cout << "Exiting program!" << std::endl;
             delete b;
-            // It's overkill
-            if (gui != NULL) {
+            if (!enableFLTK && !enableSDL) {
+                delete gui; // shared w/ scr, bep, bop
+            } else {
                 delete gui;
-            }
-            if (scr != NULL) {
-                delete scr;
-            }
-            if (bep != NULL) {
-                delete bep;
-            }
-            if (bop != NULL) {
-                delete bop;
+                delete scr; // shared w/ bep, bop
             }
         } catch (const std::out_of_range &e) {
             std::cout << "Out of range error: " << e.what() << std::endl;
