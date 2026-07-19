@@ -52,32 +52,16 @@ unsigned char chipperNULL::get_key_pressed() const {
 	return ' ';
 }
 
-void chipperNULL::load_rom(std::string filename) {
-    return;
-}
-
-void chipperNULL::system_pause() {
-    return;
-}
-
-void chipperNULL::system_resume() {
-    return;
+bool chipperNULL::get_pause_state() {
+	return false;
 }
 
 chippy::systype chipperNULL::get_quirks_mode() {
     return chippy::CHIP8;
 }
 
-void chipperNULL::set_quirks_mode(chippy::systype quirks_mode) {
-    return;
-}
-
 int chipperNULL::get_interpreter_speed() {
     return 0;
-}
-
-void chipperNULL::set_interpreter_speed(int interpreter_speed) {
-    return;
 }
 
 void chipperNULL::process_gui_events() {
