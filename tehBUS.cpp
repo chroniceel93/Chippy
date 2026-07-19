@@ -3,12 +3,10 @@
 tehBUS::tehBUS(tehSCREEN& s
              , tehBEEP& b
              , tehBOOP& k
-             , tehGUI& g
              , chippy::systype sys) 
                  : screen(s)
                  , speaker(b)
-                 , keyboard(k)
-                 , gui(g) {
+                 , keyboard(k) {
     this->system = sys;
     this->memory = new tehRAMS();
     this->framebuffer = new tehVIDEO(s, sys);
@@ -26,7 +24,7 @@ tehBUS::~tehBUS() {
 
 void tehBUS::clock_bus() {
     this->keyboard.process_keypad_events();
-    this->gui.process_gui_events();
+    // this->gui.process_gui_events();
     this->framebuffer->update_screen();
     // this->screen.refresh_screen();
     this->audiobuffer->SoundTick(this->speakerState);
@@ -34,9 +32,10 @@ void tehBUS::clock_bus() {
     return;
 }
 
-bool tehBUS::get_exit_state() {
-    return this->gui.get_exit_state();
-}
+// bool tehBUS::get_exit_state() {
+//     // return this->gui.get_exit_state();
+//     return false;
+// }
 
 unsigned char tehBUS::read_ram(int addr) {
     return this->memory->read_ram(addr);

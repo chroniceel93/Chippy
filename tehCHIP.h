@@ -17,6 +17,7 @@
 #include "tehROM.h"
 #include "tehBUS.h"
 #include "tehCPUS.h"
+#include "tehGUI.h"
 
 namespace chippy {
 
@@ -34,8 +35,12 @@ private:
     tehBUS *bus;
     /** A pointer to our processor. */
     tehCPUS *processor;
+    /** A pointer to our GUI. */
+    tehGUI *gui;
     /** Contains our current quirks mode. */
     systype operating_mode;
+
+    bool exit;
 
 public:
     /**

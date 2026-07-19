@@ -10,10 +10,12 @@ tehCHIP::tehCHIP(
     systype opMode
 ) {
     this->operating_mode = opMode;
-    this->bus = new tehBUS(s, b, k, g, opMode);
+    this->bus = new tehBUS(s, b, k, opMode);
     this->processor = new tehCPUS(*this->bus, opMode);
     this->disk = NULL;
+    this->gui = &g;
     this->reset_system();
+    this->exit = false;
     return;
 }
 
@@ -48,12 +50,20 @@ void tehCHIP::execute()  {
     std::chrono::milliseconds delta;
 
     // while (!this->processor.halt() & !this->screen.update_state()) {
-    while (!this->bus->get_exit_state()) {
+    while (!exit) {
         delta 
            = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
         // TODO: After implementing toggle for vblank quirk, work out some math
         //   to make clock speed easily tweakable. As it stands, this looks
         //   pretty gnarly.
+        
+        // Process GUI events before emulation routine.
+        // How do we quit, now? Handle it here. No instruction should be able to
+        // actually exit the emulator, so we keep that out of the bus entirely.
+
+        this->gui->process_gui_events();
+        exit = this->gui->get_exit_state();
+        
         if (delta > std::chrono::milliseconds(16)) {
             for (auto i = 0; 
                  i < ((1000000 * (int) delta.count()) / 1000000);

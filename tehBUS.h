@@ -16,7 +16,6 @@
 #include "tehSCREEN.h"
 #include "tehBOOP.h"
 #include "tehBEEP.h"
-#include "tehGUI.h"
 
 /**
  * @brief tehBUS connects all of our interfaces together.
@@ -44,7 +43,6 @@ private:
     tehSCREEN& screen;
     tehBEEP& speaker;
     tehBOOP& keyboard;
-    tehGUI& gui;
     tehRAMS* memory;
     tehVIDEO* framebuffer;
     tehAUDIO* audiobuffer;
@@ -68,7 +66,6 @@ public:
           tehSCREEN& s
         , tehBEEP& b
         , tehBOOP& k
-        , tehGUI& g
         , chippy::systype sys = chippy::CHIP8
     );
     
@@ -90,7 +87,7 @@ public:
      * 
      * @return If true, we should exit, otherwise continue.
      */
-    bool get_exit_state();
+    // bool get_exit_state();
 
     // Memory
     
