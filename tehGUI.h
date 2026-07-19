@@ -13,6 +13,8 @@ public:
 
     // virtual void system_pause() = 0;
     // virtual void system_resume() = 0;
+    // If true, pause emulation.
+    virtual bool get_pause_state() = 0;
 
     virtual chippy::systype get_quirks_mode() = 0;
     // virtual void set_quirks_mode(chippy::systype quirks_mode) = 0;

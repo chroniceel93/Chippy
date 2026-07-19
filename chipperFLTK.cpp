@@ -9,7 +9,7 @@ chipperFLTK::chipperFLTK() {
     // this->box->labeltype(FL_SHADOW_LABEL);
     this->paws = new Fl_Button(0, 0, 100, 32, "Pause");
     this->paws->type(FL_TOGGLE_BUTTON);
-    this->paws->callback(system_pause, static_cast<void*>(this));
+    this->paws->callback(pause_button_callback, static_cast<void*>(this));
     this->box = new Fl_Box(100, 0, 200, 32, "To_Init");
     this->main_window->end();
     this->main_window->show();
@@ -26,14 +26,14 @@ void chipperFLTK::load_rom(std::string filename) {
     return;
 }
 
-void chipperFLTK::system_pause(Fl_Widget*, void* v) {
+void chipperFLTK::pause_button_callback(Fl_Widget*, void* v) {
     chipperFLTK *temp = static_cast<chipperFLTK*>(v);
-    temp->is_paused = true;
+    temp->is_paused = static_cast<bool>(temp->paws->value());
     return;
 }
 
-void chipperFLTK::system_resume() {
-    return;
+bool chipperFLTK::get_pause_state() {
+    return this->is_paused;
 }
 
 chippy::systype chipperFLTK::get_quirks_mode() {

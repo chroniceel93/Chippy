@@ -41,6 +41,9 @@ void tehCHIP::load_program(std::string filename) {
 }
 
 void tehCHIP::execute()  {
+    // Some important vars that aren't used class-wide are defined here.
+    bool pause = false;
+
     std::chrono::time_point<std::chrono::steady_clock> start, end;
     start = std::chrono::steady_clock::now();
     end = start;
@@ -50,6 +53,7 @@ void tehCHIP::execute()  {
     std::chrono::milliseconds delta;
 
     // while (!this->processor.halt() & !this->screen.update_state()) {
+
     while (!exit) {
         delta 
            = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
@@ -63,8 +67,10 @@ void tehCHIP::execute()  {
 
         this->gui->process_gui_events();
         exit = this->gui->get_exit_state();
+        pause = this->gui->get_pause_state();
+        // Using getters like this might actually work out for a lot of things.
         
-        if (delta > std::chrono::milliseconds(16)) {
+        if ((delta > std::chrono::milliseconds(16)) && !pause) {
             for (auto i = 0; 
                  i < ((1000000 * (int) delta.count()) / 1000000);
                  i++) 

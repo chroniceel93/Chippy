@@ -22,8 +22,8 @@ public:
 
     void load_rom(std::string filename);
 
-    static void system_pause(Fl_Widget*, void* v);
-    void system_resume();
+    static void pause_button_callback(Fl_Widget*, void* v);
+    bool get_pause_state();
 
     chippy::systype get_quirks_mode();
     void set_quirks_mode(chippy::systype quirks_mode);
